@@ -61,7 +61,9 @@ ENTITLEMENTS = $(SRC_DIR)/PinyinInputMethod.entitlements
 RESOURCES = \
     $(SRC_DIR)/Resources/pinyin_map.txt \
     $(SRC_DIR)/Resources/pinyin_base.db \
-    $(SRC_DIR)/Resources/Assets.xcassets
+    $(SRC_DIR)/Resources/Assets.xcassets \
+    $(SRC_DIR)/Resources/AppIcon.png \
+    $(SRC_DIR)/Resources/menuicon.png
 
 .PHONY: all clean directories
 
