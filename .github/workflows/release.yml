@@ -33,9 +33,11 @@ jobs:
         zip -r PinyinInputMethod.zip PinyinInputMethod.app
     
     - name: Create Release
-      uses: softprops/action-gh-release@v1
-      with:
-        files: build/PinyinInputMethod.zip
-        generate_release_notes: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        gh release create ${{ github.ref_name }} \
+          build/PinyinInputMethod.zip \
+          --title "Release ${{ github.ref_name }}" \
+          --notes "自动构建发布" \
+          --repo ${{ github.repository }}
