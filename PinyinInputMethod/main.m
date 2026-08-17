@@ -7,6 +7,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import <InputMethodKit/InputMethodKit.h>
+#import <Carbon/Carbon.h>
 
 // 输入法连接名称，需与 Info.plist 中 InputMethodConnectionName 保持一致
 static NSString * const kConnectionName = @"com.ximeng.inputmethod.connection";
@@ -15,6 +16,15 @@ static NSString * const kInputMethodBundleID = @"com.ximeng.inputmethod";
 
 int main(int argc, char *argv[]) {
     @autoreleasepool {
+        // 注册输入法到系统
+        NSURL *bundleURL = [[NSBundle mainBundle] bundleURL];
+        OSStatus status = TISRegisterInputSource((__bridge CFURLRef)bundleURL);
+        if (status == noErr) {
+            NSLog(@"[PinyinInputMethod] 输入法已向系统注册");
+        } else {
+            NSLog(@"[PinyinInputMethod] 输入法注册失败，错误码: %d", (int)status);
+        }
+        
         // 连接输入法服务器
         IMKServer *server = [[IMKServer alloc] initWithName:kConnectionName
                                           bundleIdentifier:kInputMethodBundleID];
@@ -25,6 +35,8 @@ int main(int argc, char *argv[]) {
         }
         
         NSLog(@"[PinyinInputMethod] 输入法服务器已启动");
+        NSLog(@"[PinyinInputMethod] Bundle: %@", bundleURL);
+        NSLog(@"[PinyinInputMethod] 连接名称: %@", kConnectionName);
         
         // 启动主事件循环
         return NSApplicationMain(argc, (const char **)argv);

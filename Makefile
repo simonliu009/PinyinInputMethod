@@ -123,10 +123,14 @@ pkg: $(APP_BUNDLE)
 	cp -R $(APP_BUNDLE) $(PKG_ROOT)/Library/Input\ Methods/
 	@# 创建 postinstall 脚本
 	@echo '#!/bin/bash' > $(SCRIPTS_DIR)/postinstall
-	@echo '# 注册输入法' >> $(SCRIPTS_DIR)/postinstall
-	@echo 'PLIST="/Library/Input Methods/PinyinInputMethod.app/Contents/Info.plist"' >> $(SCRIPTS_DIR)/postinstall
-	@echo 'if [ -f "$$PLIST" ]; then' >> $(SCRIPTS_DIR)/postinstall
-	@echo '    /usr/bin/killall -HUP cfprefsd 2>/dev/null || true' >> $(SCRIPTS_DIR)/postinstall
+	@echo '# 刷新系统偏好设置缓存' >> $(SCRIPTS_DIR)/postinstall
+	@echo '/usr/bin/killall -HUP cfprefsd 2>/dev/null || true' >> $(SCRIPTS_DIR)/postinstall
+	@echo '# 启动一次输入法以触发系统注册' >> $(SCRIPTS_DIR)/postinstall
+	@echo 'IM_APP="/Library/Input Methods/PinyinInputMethod.app"' >> $(SCRIPTS_DIR)/postinstall
+	@echo 'if [ -d "$$IM_APP" ]; then' >> $(SCRIPTS_DIR)/postinstall
+	@echo '    open "$$IM_APP" &' >> $(SCRIPTS_DIR)/postinstall
+	@echo '    sleep 2' >> $(SCRIPTS_DIR)/postinstall
+	@echo '    killall PinyinInputMethod 2>/dev/null || true' >> $(SCRIPTS_DIR)/postinstall
 	@echo 'fi' >> $(SCRIPTS_DIR)/postinstall
 	@echo 'exit 0' >> $(SCRIPTS_DIR)/postinstall
 	@chmod +x $(SCRIPTS_DIR)/postinstall
