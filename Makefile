@@ -89,6 +89,8 @@ $(APP_BUNDLE): $(OBJECTS)
 			cp -R "$$res" $(RESOURCES_DIR)/; \
 		fi; \
 	done
+	@echo "代码签名..."
+	codesign --force --deep --sign - $(APP_BUNDLE)
 	@echo "============================================"
 	@echo "构建成功！"
 	@echo "应用包: $(APP_BUNDLE)"
