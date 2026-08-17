@@ -1,0 +1,191 @@
+name: Build PinyinInputMethod
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    name: Build on macOS
+    runs-on: macos-13
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    
+    - name: Select Xcode
+      run: sudo xcode-select -s /Applications/Xcode_15.0.app/Contents/Developer
+    
+    - name: Check environment
+      run: |
+        echo "macOS version: $(sw_vers -productVersion)"
+        echo "Xcode version: $(xcodebuild -version)"
+        echo "clang version: $(clang --version | head -1)"
+    
+    - name: Build with Make
+      run: |
+        make all
+      env:
+        MACOSX_DEPLOYMENT_TARGET: "11.0"
+    
+    - name: Verify app bundle
+      run: |
+        if [ -d "build/PinyinInputMethod.app" ]; then
+          echo "✅ App bundle created successfully"
+          echo "Contents:"
+          ls -la build/PinyinInputMethod.app/Contents/
+          echo "MacOS binary:"
+          ls -la build/PinyinInputMethod.app/Contents/MacOS/
+          echo "Resources:"
+          ls -la build/PinyinInputMethod.app/Contents/Resources/
+          echo "Info.plist:"
+          cat build/PinyinInputMethod.app/Contents/Info.plist | head -20
+        else
+          echo "❌ App bundle not found!"
+          exit 1
+        fi
+    
+    - name: Check binary
+      run: |
+        file build/PinyinInputMethod.app/Contents/MacOS/PinyinInputMethod
+        otool -L build/PinyinInputMethod.app/Contents/MacOS/PinyinInputMethod
+    
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: PinyinInputMethod
+        path: build/PinyinInputMethod.app/
+        retention-days: 30
+
+  build-dictionary:
+    name: Build Dictionary Database
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Generate dictionary text
+      run: |
+        cd Tools/DictionaryBuilder
+        python generate_base_dictionary.py
+    
+    - name: Build SQLite database
+      run: |
+        cd Tools/DictionaryBuilder
+        python build_dictionary.py \
+          ../../PinyinInputMethod/Resources/pinyin_base.db \
+          ../../PinyinInputMethod/Resources/pinyin_map.txt
+    
+    - name: Verify database
+      run: |
+        python3 -c "
+        import sqlite3, os
+        db_path = 'PinyinInputMethod/Resources/pinyin_base.db'
+        size = os.path.getsize(db_path)
+        conn = sqlite3.connect(db_path)
+        c = conn.cursor()
+        c.execute('SELECT COUNT(*) FROM words')
+        count = c.fetchone()[0]
+        c.execute('SELECT COUNT(DISTINCT pinyin) FROM words')
+        pinyin_count = c.fetchone()[0]
+        conn.close()
+        print(f'Database size: {size / 1024:.1f} KB')
+        print(f'Total words: {count}')
+        print(f'Unique pinyin: {pinyin_count}')
+        assert count > 50000, f'Expected >50000 words, got {count}'
+        print('✅ Dictionary verification passed!')
+        "
+    
+    - name: Upload dictionary artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: DictionaryDatabase
+        path: |
+          PinyinInputMethod/Resources/pinyin_base.db
+          PinyinInputMethod/Resources/pinyin_map.txt
+        retention-days: 30
+
+  lint:
+    name: Code Quality Check
+    runs-on: macos-13
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    
+    - name: Check Objective-C syntax
+      run: |
+        echo "Checking Objective-C source files..."
+        ERRORS=0
+        for f in $(find PinyinInputMethod -name "*.m" -o -name "*.h"); do
+          # Basic syntax check - look for common issues
+          if grep -n "import " "$f" | grep -v "#import" | grep -v "//" | grep -v "/\*"; then
+            echo "⚠️  $f: possible missing # in import"
+          fi
+        done
+        echo "✅ Syntax check complete"
+    
+    - name: Verify all required files exist
+      run: |
+        echo "Verifying project structure..."
+        REQUIRED_FILES=(
+          "PinyinInputMethod/main.m"
+          "PinyinInputMethod/Info.plist"
+          "PinyinInputMethod/AppDelegate.h"
+          "PinyinInputMethod/AppDelegate.m"
+          "PinyinInputMethod/InputController.h"
+          "PinyinInputMethod/InputController.m"
+          "PinyinInputMethod/PinyinEngine/PinyinEngine.h"
+          "PinyinInputMethod/PinyinEngine/PinyinEngine.m"
+          "PinyinInputMethod/PinyinEngine/PinyinParser.h"
+          "PinyinInputMethod/PinyinEngine/PinyinParser.m"
+          "PinyinInputMethod/PinyinEngine/CandidateRanker.h"
+          "PinyinInputMethod/PinyinEngine/CandidateRanker.m"
+          "PinyinInputMethod/PinyinEngine/FuzzyMatcher.h"
+          "PinyinInputMethod/PinyinEngine/FuzzyMatcher.m"
+          "PinyinInputMethod/Dictionary/DictionaryManager.h"
+          "PinyinInputMethod/Dictionary/DictionaryManager.m"
+          "PinyinInputMethod/Dictionary/DictionaryDB.h"
+          "PinyinInputMethod/Dictionary/DictionaryDB.m"
+          "PinyinInputMethod/Dictionary/SogouSCelParser.h"
+          "PinyinInputMethod/Dictionary/SogouSCelParser.m"
+          "PinyinInputMethod/Dictionary/UserDictionary.h"
+          "PinyinInputMethod/Dictionary/UserDictionary.m"
+          "PinyinInputMethod/UI/CandidateWindow.h"
+          "PinyinInputMethod/UI/CandidateWindow.m"
+          "PinyinInputMethod/UI/CandidateCell.h"
+          "PinyinInputMethod/UI/CandidateCell.m"
+          "PinyinInputMethod/UI/StatusBarItem.h"
+          "PinyinInputMethod/UI/StatusBarItem.m"
+          "PinyinInputMethod/UI/PreferencesWindow.h"
+          "PinyinInputMethod/UI/PreferencesWindow.m"
+          "PinyinInputMethod/UI/InstallationGuide.h"
+          "PinyinInputMethod/UI/InstallationGuide.m"
+          "PinyinInputMethod/Utils/ConfigManager.h"
+          "PinyinInputMethod/Utils/ConfigManager.m"
+          "PinyinInputMethod/Utils/StringHelper.h"
+          "PinyinInputMethod/Utils/StringHelper.m"
+          "PinyinInputMethod/Resources/pinyin_map.txt"
+          "PinyinInputMethod/Resources/Assets.xcassets/Contents.json"
+        )
+        MISSING=0
+        for f in "${REQUIRED_FILES[@]}"; do
+          if [ ! -f "$f" ]; then
+            echo "❌ Missing: $f"
+            MISSING=$((MISSING + 1))
+          fi
+        done
+        if [ $MISSING -eq 0 ]; then
+          echo "✅ All ${#REQUIRED_FILES[@]} required files present"
+        else
+          echo "❌ $MISSING files missing"
+          exit 1
+        fi

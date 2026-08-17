@@ -1,0 +1,29 @@
+# Xcode
+*.xcodeproj
+*.xcworkspace
+xcuserdata/
+DerivedData/
+*.xcscmblueprint
+
+# Build
+build/
+*.o
+*.d
+
+# macOS
+.DS_Store
+*.swp
+*~
+
+# IDE
+.idea/
+.vscode/
+*.sublime-*
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Generated (can be rebuilt with: cd Tools/DictionaryBuilder && python generate_base_dictionary.py && python build_dictionary.py)
+# PinyinInputMethod/Resources/pinyin_base.db
