@@ -112,7 +112,7 @@ static const CGFloat kCornerRadius = 6.0;
         // 默认样式
         _candidateFont = [NSFont systemFontOfSize:14];
         _pinyinFont = [NSFont systemFontOfSize:11];
-        _backgroundColor = [NSColor colorWithWhite:0.98 alpha:0.95];
+        _candidateBackgroundColor = [NSColor colorWithWhite:0.98 alpha:0.95];
         _selectedBackgroundColor = [NSColor systemBlueColor];
         _textColor = [NSColor blackColor];
         _selectedTextColor = [NSColor whiteColor];
@@ -124,7 +124,7 @@ static const CGFloat kCornerRadius = 6.0;
         // 创建候选词视图
         CandidateView *view = [[CandidateView alloc] initWithFrame:frame];
         view.candidateFont = _candidateFont;
-        view.backgroundColor = _backgroundColor;
+        view.backgroundColor = _candidateBackgroundColor;
         view.selectedBackgroundColor = _selectedBackgroundColor;
         view.textColor = _textColor;
         view.selectedTextColor = _selectedTextColor;
@@ -145,7 +145,7 @@ static const CGFloat kCornerRadius = 6.0;
     view.candidates = candidates;
     view.selectedIndex = _selectedIndex;
     view.candidateFont = _candidateFont;
-    view.backgroundColor = _backgroundColor;
+    view.backgroundColor = _candidateBackgroundColor;
     view.selectedBackgroundColor = _selectedBackgroundColor;
     view.textColor = _textColor;
     view.selectedTextColor = _selectedTextColor;

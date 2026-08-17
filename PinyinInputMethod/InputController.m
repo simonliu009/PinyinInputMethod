@@ -10,14 +10,16 @@
 #import "CandidateWindow.h"
 #import "DictionaryManager.h"
 #import "AppDelegate.h"
+#import "StatusBarItem.h"
 #import "ConfigManager.h"
 
-// 虚拟键码定义
+// 虚拟键码（如果 Carbon 未定义则使用）
+#ifndef kVK_Return
 enum {
     kVK_Return        = 0x24,
     kVK_Tab           = 0x30,
     kVK_Space         = 0x31,
-    kVK_Delete        = 0x33,  // Backspace
+    kVK_Delete        = 0x33,
     kVK_Escape        = 0x35,
     kVK_ForwardDelete = 0x75,
     kVK_LeftArrow     = 0x7B,
@@ -25,6 +27,7 @@ enum {
     kVK_DownArrow     = 0x7D,
     kVK_UpArrow       = 0x7E,
 };
+#endif
 
 static InputController *currentInstance = nil;
 
@@ -35,7 +38,7 @@ static InputController *currentInstance = nil;
 - (instancetype)initWithServer:(IMKServer *)server
                     client:(id)client
 {
-    self = [super initWithServer:server client:client];
+    self = [super init];
     if (self) {
         currentInstance = self;
         
@@ -460,7 +463,13 @@ static InputController *currentInstance = nil;
     [[ConfigManager sharedManager] setInteger:_inputMode forKey:@"inputMode"];
     
     // 更新状态栏图标
-    [[AppDelegate sharedAppDelegate].statusBarItem updateStatusIcon];
+    id<NSObject> appDelegate = [AppDelegate sharedAppDelegate];
+    if ([appDelegate respondsToSelector:@selector(statusBarItem)]) {
+        id statusItem = [appDelegate valueForKey:@"statusBarItem"];
+        if ([statusItem respondsToSelector:@selector(updateStatusIcon)]) {
+            [statusItem performSelector:@selector(updateStatusIcon)];
+        }
+    }
     
     // 如果切换模式时有组合输入，提交它
     if (_isComposing) {
@@ -504,7 +513,7 @@ static InputController *currentInstance = nil;
     id client = [self client];
     
     // 通过 IMK 获取光标位置
-    NSDictionary *attrs = [client attributesForCharacterIndex:0 
+    NSDictionary *attrs = [(id<IMKTextInput>)client attributesForCharacterIndex:0 
                                                    lineHeightRectangleInstead:YES];
     if (attrs) {
         NSValue *rectValue = attrs[@"kIMKTextFrame"];

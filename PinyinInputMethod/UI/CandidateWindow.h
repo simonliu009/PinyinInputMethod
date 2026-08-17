@@ -28,7 +28,7 @@
 @property (nonatomic, strong) NSFont *pinyinFont;
 
 /// 背景颜色
-@property (nonatomic, strong) NSColor *backgroundColor;
+@property (nonatomic, copy) NSColor *candidateBackgroundColor;
 
 /// 选中项背景颜色
 @property (nonatomic, strong) NSColor *selectedBackgroundColor;
