@@ -11,8 +11,9 @@ MACOSX_DEPLOYMENT_TARGET = 11.0
 # 框架
 FRAMEWORKS = -framework Cocoa -framework InputMethodKit -framework Carbon -framework UniformTypeIdentifiers -lsqlite3
 
-# 编译选项
+# 编译选项（Universal Binary：同时支持 Intel 和 Apple Silicon）
 CFLAGS = -ObjC -mmacosx-version-min=11.0 -fobjc-arc \
+         -arch x86_64 -arch arm64 \
          -I$(SRC_DIR) \
          -I$(SRC_DIR)/PinyinEngine \
          -I$(SRC_DIR)/Dictionary \
@@ -20,7 +21,7 @@ CFLAGS = -ObjC -mmacosx-version-min=11.0 -fobjc-arc \
          -I$(SRC_DIR)/Utils
 
 # 链接选项
-LDFLAGS = $(FRAMEWORKS) -mmacosx-version-min=11.0
+LDFLAGS = $(FRAMEWORKS) -mmacosx-version-min=11.0 -arch x86_64 -arch arm64
 
 # 目录
 SRC_DIR = PinyinInputMethod
