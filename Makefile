@@ -70,7 +70,7 @@ directories:
 	@mkdir -p $(BUILD_DIR)
 	@mkdir -p $(MACOS_DIR)
 	@mkdir -p $(RESOURCES_DIR)
-	@mkdir -p $(patsort $(dir $(OBJECTS)))
+	@mkdir -p $(sort $(dir $(OBJECTS)))
 
 # 编译目标文件
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.m
