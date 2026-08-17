@@ -108,6 +108,43 @@ install: $(APP_BUNDLE)
 	sudo cp -R $(APP_BUNDLE) "/Library/Input Methods/"
 	@echo "安装完成！请在系统偏好设置中启用输入法。"
 
+# 构建 pkg 安装包
+PKG_DIR = $(BUILD_DIR)/pkg
+PKG_ROOT = $(PKG_DIR)/root
+SCRIPTS_DIR = $(PKG_DIR)/scripts
+PKG_FILE = $(BUILD_DIR)/PinyinInputMethod.pkg
+
+pkg: $(APP_BUNDLE)
+	@echo "构建 pkg 安装包..."
+	@rm -rf $(PKG_DIR)
+	@mkdir -p $(PKG_ROOT)/Library/Input\ Methods
+	@mkdir -p $(SCRIPTS_DIR)
+	@# 复制 app 到安装目录
+	cp -R $(APP_BUNDLE) $(PKG_ROOT)/Library/Input\ Methods/
+	@# 创建 postinstall 脚本
+	@echo '#!/bin/bash' > $(SCRIPTS_DIR)/postinstall
+	@echo '# 注册输入法' >> $(SCRIPTS_DIR)/postinstall
+	@echo 'PLIST="/Library/Input Methods/PinyinInputMethod.app/Contents/Info.plist"' >> $(SCRIPTS_DIR)/postinstall
+	@echo 'if [ -f "$$PLIST" ]; then' >> $(SCRIPTS_DIR)/postinstall
+	@echo '    /usr/bin/killall -HUP cfprefsd 2>/dev/null || true' >> $(SCRIPTS_DIR)/postinstall
+	@echo 'fi' >> $(SCRIPTS_DIR)/postinstall
+	@echo 'exit 0' >> $(SCRIPTS_DIR)/postinstall
+	@chmod +x $(SCRIPTS_DIR)/postinstall
+	@# 构建 pkg
+	pkgbuild --root $(PKG_ROOT) \
+		--scripts $(SCRIPTS_DIR) \
+		--identifier com.pinyin.inputmethod \
+		--version 1.0.0 \
+		--install-location / \
+		$(PKG_FILE)
+	@echo "============================================"
+	@echo "pkg 安装包构建成功！"
+	@echo "安装包: $(PKG_FILE)"
+	@echo "============================================"
+	@echo ""
+	@echo "双击 .pkg 文件即可安装"
+	@echo "安装后在 系统设置 → 键盘 → 输入法 中添加"
+
 # 运行测试（需要 macOS）
 test:
 	@echo "编译测试..."

@@ -22,12 +22,17 @@ jobs:
         sudo xcode-select -s /Applications/Xcode.app/Contents/Developer || true
         xcode-select -p
     
-    - name: Build
+    - name: Build app
       run: make all
       env:
         MACOSX_DEPLOYMENT_TARGET: "11.0"
     
-    - name: Package app
+    - name: Build pkg
+      run: make pkg
+      env:
+        MACOSX_DEPLOYMENT_TARGET: "11.0"
+    
+    - name: Package app as zip
       run: |
         cd build
         zip -r PinyinInputMethod.zip PinyinInputMethod.app
@@ -37,7 +42,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         gh release create ${{ github.ref_name }} \
+          build/PinyinInputMethod.pkg \
           build/PinyinInputMethod.zip \
           --title "Release ${{ github.ref_name }}" \
-          --notes "自动构建发布" \
+          --notes "macOS 拼音输入法安装包\n\n- **PinyinInputMethod.pkg** - 双击安装（推荐）\n- **PinyinInputMethod.zip** - 免安装版本" \
           --repo ${{ github.repository }}
