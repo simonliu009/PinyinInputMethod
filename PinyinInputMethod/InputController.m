@@ -499,7 +499,7 @@ static InputController *currentInstance = nil;
     NSDictionary *attrs = nil;
     SEL sel = @selector(attributesForCharacterIndex:lineHeightRectangleInstead:);
     if ([textInput respondsToSelector:sel]) {
-        NSRect (*msgSend)(id, SEL, NSInteger, BOOL) = (void *)objc_msgSend;
+        NSDictionary *(*msgSend)(id, SEL, NSInteger, BOOL) = (void *)objc_msgSend;
         attrs = msgSend(textInput, sel, 0, YES);
     }
     if (attrs) {
