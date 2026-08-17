@@ -36,7 +36,7 @@
     <key>InputMethodServerControllerClass</key>
     <string>InputController</string>
     
-    <!-- 支持的输入法 -->
+    <!-- 输入法模式列表 -->
     <key>tsInputModeListKey</key>
     <dict>
         <key>com.ximeng.inputmethod.pinyin</key>
@@ -45,35 +45,16 @@
             <string>com.ximeng.inputmethod.pinyin</string>
             <key>TISIntendedLanguage</key>
             <string>zh-Hans</string>
-            <key>tsInputModeAlternateMenuIconFileKey</key>
-            <string>menuicon.png</string>
-            <key>tsInputModeKeyEquivalentKey</key>
-            <string></string>
-            <key>tsInputModeKeyEquivalentModifiersKey</key>
-            <integer>0</integer>
-            <key>tsInputModeMenuIconFileKey</key>
-            <string>menuicon.png</string>
-            <key>tsInputModeIsVisibleKey</key>
-            <true/>
-            <key>tsInputModePrimaryInScriptKey</key>
-            <true/>
             <key>tsInputModeScriptKey</key>
             <string>smpl</string>
-        </dict>
-    </dict>
-    
-    <!-- 输入法能力声明 -->
-    <key>ComponentInputModeDict</key>
-    <dict>
-        <key>tsInputModeListKey</key>
-        <dict>
-            <key>com.ximeng.inputmethod.pinyin</key>
-            <dict>
-                <key>TISInputSourceID</key>
-                <string>com.ximeng.inputmethod.pinyin</string>
-                <key>TISIntendedLanguage</key>
-                <string>zh-Hans</string>
-            </dict>
+            <key>tsInputModePrimaryInScriptKey</key>
+            <true/>
+            <key>tsInputModeIsVisibleKey</key>
+            <true/>
+            <key>tsInputModeMenuIconFileKey</key>
+            <string>menuicon.png</string>
+            <key>tsInputModeAlternateMenuIconFileKey</key>
+            <string>menuicon.png</string>
         </dict>
     </dict>
 </dict>
