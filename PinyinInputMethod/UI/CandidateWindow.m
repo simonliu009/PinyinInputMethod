@@ -96,7 +96,7 @@ static const CGFloat kCornerRadius = 6.0;
     NSRect frame = NSMakeRect(0, 0, 400, kCandidateHeight + kCandidatePadding * 2);
     
     self = [super initWithContentRect:frame
-                            styleMask:NSBorderlessWindowMask
+                            styleMask:NSWindowStyleMaskBorderless
                               backing:NSBackingStoreBuffered
                                 defer:NO];
     if (self) {

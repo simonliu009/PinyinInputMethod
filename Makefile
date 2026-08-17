@@ -9,7 +9,7 @@ CC = clang
 MACOSX_DEPLOYMENT_TARGET = 11.0
 
 # 框架
-FRAMEWORKS = -framework Cocoa -framework InputMethodKit -framework Carbon -lsqlite3
+FRAMEWORKS = -framework Cocoa -framework InputMethodKit -framework Carbon -framework UniformTypeIdentifiers -lsqlite3
 
 # 编译选项
 CFLAGS = -ObjC -mmacosx-version-min=11.0 -fobjc-arc \

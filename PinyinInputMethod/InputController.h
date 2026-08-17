@@ -54,4 +54,7 @@ typedef NS_ENUM(NSInteger, InputMode) {
 /// 获取当前控制器实例
 + (instancetype)currentController;
 
+/// 切换中英文输入模式
+- (void)toggleInputMode;
+
 @end

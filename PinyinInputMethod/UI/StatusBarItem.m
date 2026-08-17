@@ -6,6 +6,7 @@
 #import "StatusBarItem.h"
 #import "ConfigManager.h"
 #import "InputController.h"
+#import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 
 // 菜单动作标识
 static NSString * const kActionToggleMode = @"toggleMode";
@@ -164,7 +165,7 @@ static NSString * const kActionQuit = @"quit";
 
 - (void)importSogouDictionary:(id)sender {
     NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-    openPanel.allowedContentTypes = @[@"public.data"];
+    openPanel.allowedContentTypes = @[[UTType typeWithIdentifier:@"public.data"]];
     openPanel.canChooseFiles = YES;
     openPanel.canChooseDirectories = NO;
     openPanel.allowsMultipleSelection = NO;
@@ -185,7 +186,7 @@ static NSString * const kActionQuit = @"quit";
     NSAlert *alert = [[NSAlert alloc] init];
     alert.messageText = @"正在导入词库...";
     alert.informativeText = [NSString stringWithFormat:@"正在导入: %@", fileURL.lastPathComponent];
-    alert.style = NSAlertStyleInformational;
+    alert.alertStyle = NSAlertStyleInformational;
     [alert beginSheetModalForWindow:[NSApp mainWindow] completionHandler:nil];
     
     // 异步导入
@@ -199,7 +200,7 @@ static NSString * const kActionQuit = @"quit";
             NSAlert *doneAlert = [[NSAlert alloc] init];
             doneAlert.messageText = @"词库导入完成";
             doneAlert.informativeText = @"搜狗词库已成功导入";
-            doneAlert.style = NSAlertStyleInformational;
+            doneAlert.alertStyle = NSAlertStyleInformational;
             [doneAlert beginSheetModalForWindow:[NSApp mainWindow] completionHandler:nil];
         });
     });
@@ -216,7 +217,7 @@ static NSString * const kActionQuit = @"quit";
                            @"• 用户词频自适应\n"
                            @"• 自定义短语\n\n"
                            @"兼容 macOS 11.0 (Big Sur) 及以上";
-    alert.style = NSAlertStyleInformational;
+    alert.alertStyle = NSAlertStyleInformational;
     [alert runModal];
 }
 
