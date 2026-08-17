@@ -20,7 +20,7 @@
     
     self = [super initWithWindow:window];
     if (self) {
-        [window setTitle:@"拼音输入法 - 偏好设置"];
+        [window setTitle:@"西蒙输入法 - 偏好设置"];
         [window center];
     }
     return self;

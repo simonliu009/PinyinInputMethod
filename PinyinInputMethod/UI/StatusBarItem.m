@@ -30,13 +30,13 @@ static NSString * const kActionQuit = @"quit";
     
     // 设置按钮
     NSStatusBarButton *button = _statusItem.button;
-    button.title = @"拼";  // 中文模式标识
-    button.toolTip = @"拼音输入法 - 中文模式";
+    button.title = @"西";  // 中文模式标识
+    button.toolTip = @"西蒙输入法 - 中文模式";
     button.action = @selector(statusBarClicked:);
     button.target = self;
     
     // 设置菜单
-    NSMenu *menu = [[NSMenu alloc] initWithTitle:@"拼音输入法"];
+    NSMenu *menu = [[NSMenu alloc] initWithTitle:@"西蒙输入法"];
     
     // 当前模式显示
     NSMenuItem *modeItem = [[NSMenuItem alloc] initWithTitle:@"当前模式：中文"
@@ -74,14 +74,14 @@ static NSString * const kActionQuit = @"quit";
     [menu addItem:[NSMenuItem separatorItem]];
     
     // 关于
-    NSMenuItem *aboutItem = [[NSMenuItem alloc] initWithTitle:@"关于拼音输入法"
+    NSMenuItem *aboutItem = [[NSMenuItem alloc] initWithTitle:@"关于西蒙输入法"
                                                        action:@selector(showAbout:)
                                                 keyEquivalent:@""];
     aboutItem.target = self;
     [menu addItem:aboutItem];
     
     // 退出
-    NSMenuItem *quitItem = [[NSMenuItem alloc] initWithTitle:@"退出拼音输入法"
+    NSMenuItem *quitItem = [[NSMenuItem alloc] initWithTitle:@"退出西蒙输入法"
                                                       action:@selector(quitInputMethod:)
                                                keyEquivalent:@"q"];
     quitItem.target = self;
@@ -102,16 +102,16 @@ static NSString * const kActionQuit = @"quit";
     
     switch (mode) {
         case InputModeChinese:
-            button.title = @"拼";
-            button.toolTip = @"拼音输入法 - 中文模式";
+            button.title = @"西";
+            button.toolTip = @"西蒙输入法 - 中文模式";
             break;
         case InputModeEnglish:
             button.title = @"En";
-            button.toolTip = @"拼音输入法 - 英文模式";
+            button.toolTip = @"西蒙输入法 - 英文模式";
             break;
         case InputModeFullWidth:
             button.title = @"全";
-            button.toolTip = @"拼音输入法 - 全角模式";
+            button.toolTip = @"西蒙输入法 - 全角模式";
             break;
     }
     
@@ -208,7 +208,7 @@ static NSString * const kActionQuit = @"quit";
 
 - (void)showAbout:(id)sender {
     NSAlert *alert = [[NSAlert alloc] init];
-    alert.messageText = @"拼音输入法 v1.0.0";
+    alert.messageText = @"西蒙输入法 v1.0.0";
     alert.informativeText = @"一款支持搜狗词库导入的 macOS 拼音输入法\n\n"
                            @"功能特点：\n"
                            @"• 智能拼音输入\n"

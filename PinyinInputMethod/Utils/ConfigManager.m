@@ -20,7 +20,7 @@ NSString * const kConfigFuzzyIn_In = @"fuzzyIn_In";
 NSString * const kConfigRememberMode = @"rememberMode";
 NSString * const kConfigSwitchKey = @"switchKey";
 
-static NSString * const kConfigDomain = @"com.pinyin.inputmethod.config";
+static NSString * const kConfigDomain = @"com.ximeng.inputmethod.config";
 
 static ConfigManager *sharedInstance = nil;
 

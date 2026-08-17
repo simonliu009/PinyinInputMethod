@@ -7,11 +7,11 @@
     <key>CFBundleExecutable</key>
     <string>PinyinInputMethod</string>
     <key>CFBundleIdentifier</key>
-    <string>com.pinyin.inputmethod</string>
+    <string>com.ximeng.inputmethod</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
-    <string>拼音输入法</string>
+    <string>西蒙输入法</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
@@ -32,17 +32,17 @@
     
     <!-- 输入法组件配置 -->
     <key>InputMethodConnectionName</key>
-    <string>com.pinyin.inputmethod.connection</string>
+    <string>com.ximeng.inputmethod.connection</string>
     <key>InputMethodServerControllerClass</key>
     <string>InputController</string>
     
     <!-- 支持的输入法 -->
     <key>tsInputModeListKey</key>
     <dict>
-        <key>com.pinyin.inputmethod.pinyin</key>
+        <key>com.ximeng.inputmethod.pinyin</key>
         <dict>
             <key>TISInputSourceID</key>
-            <string>com.pinyin.inputmethod.pinyin</string>
+            <string>com.ximeng.inputmethod.pinyin</string>
             <key>TISIntendedLanguage</key>
             <string>zh-Hans</string>
             <key>tsInputModeAlternateMenuIconFileKey</key>
@@ -67,10 +67,10 @@
     <dict>
         <key>tsInputModeListKey</key>
         <dict>
-            <key>com.pinyin.inputmethod.pinyin</key>
+            <key>com.ximeng.inputmethod.pinyin</key>
             <dict>
                 <key>TISInputSourceID</key>
-                <string>com.pinyin.inputmethod.pinyin</string>
+                <string>com.ximeng.inputmethod.pinyin</string>
                 <key>TISIntendedLanguage</key>
                 <string>zh-Hans</string>
             </dict>

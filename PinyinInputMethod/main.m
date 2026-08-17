@@ -9,7 +9,7 @@
 #import <InputMethodKit/InputMethodKit.h>
 
 // 输入法 Bundle Identifier，需与 Info.plist 中保持一致
-static NSString * const kInputMethodBundleID = @"com.pinyin.inputmethod";
+static NSString * const kInputMethodBundleID = @"com.ximeng.inputmethod";
 
 int main(int argc, char *argv[]) {
     @autoreleasepool {

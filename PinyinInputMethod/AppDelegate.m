@@ -13,7 +13,7 @@
 static AppDelegate *sharedInstance = nil;
 
 // 输入法服务器连接名称
-static NSString * const kConnectionName = @"com.pinyin.inputmethod.connection";
+static NSString * const kConnectionName = @"com.ximeng.inputmethod.connection";
 
 @implementation AppDelegate
 
@@ -109,7 +109,7 @@ static NSString * const kConnectionName = @"com.pinyin.inputmethod.connection";
 #pragma mark - 菜单构建
 
 - (NSMenu *)applicationDockMenu:(NSApplication *)sender {
-    NSMenu *menu = [[NSMenu alloc] initWithTitle:@"拼音输入法"];
+    NSMenu *menu = [[NSMenu alloc] initWithTitle:@"西蒙输入法"];
     
     [menu addItemWithTitle:@"偏好设置..." 
                     action:@selector(showPreferences:) 
@@ -117,7 +117,7 @@ static NSString * const kConnectionName = @"com.pinyin.inputmethod.connection";
     
     [menu addItem:[NSMenuItem separatorItem]];
     
-    [menu addItemWithTitle:@"退出拼音输入法" 
+    [menu addItemWithTitle:@"退出西蒙输入法" 
                     action:@selector(quitInputMethod:) 
              keyEquivalent:@"q"];
     
