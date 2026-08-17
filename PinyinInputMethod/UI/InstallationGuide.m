@@ -1,5 +1,5 @@
 /*
- * PinyinInputMethod - macOS 拼音输入法
+ * PinyinInputMethod - macOS 拼音输入�?
  * InstallationGuide.m - 安装引导界面实现
  */
 
@@ -21,7 +21,7 @@ static NSString * const kGuideCompletedKey = @"installationGuideCompleted";
     
     self = [super initWithWindow:window];
     if (self) {
-        [window setTitle:@"拼音输入法 - 安装引导"];
+        [window setTitle:@"拼音输入�?- 安装引导"];
         [window center];
         [window setStyleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskClosable];
         _currentStep = 0;
@@ -52,7 +52,7 @@ static NSString * const kGuideCompletedKey = @"installationGuideCompleted";
     
     // 标题
     NSTextField *title = [[NSTextField alloc] initWithFrame:NSMakeRect(30, 360, 500, 30)];
-    title.stringValue = @"欢迎使用拼音输入法";
+    title.stringValue = @"欢迎使用拼音输入�?;
     title.font = [NSFont boldSystemFontOfSize:22];
     title.editable = NO;
     title.bordered = NO;
@@ -63,9 +63,9 @@ static NSString * const kGuideCompletedKey = @"installationGuideCompleted";
     _contentContainer = [[NSView alloc] initWithFrame:NSMakeRect(30, 80, 500, 260)];
     [contentView addSubview:_contentContainer];
     
-    // 底部按钮区
+    // 底部按钮�?
     NSButton *prevBtn = [[NSButton alloc] initWithFrame:NSMakeRect(30, 30, 80, 32)];
-    prevBtn.title = @"上一步";
+    prevBtn.title = @"上一�?;
     prevBtn.bezelStyle = NSBezelStyleRounded;
     prevBtn.action = @selector(previousStep:);
     prevBtn.target = self;
@@ -73,14 +73,14 @@ static NSString * const kGuideCompletedKey = @"installationGuideCompleted";
     [contentView addSubview:prevBtn];
     
     NSButton *nextBtn = [[NSButton alloc] initWithFrame:NSMakeRect(450, 30, 80, 32)];
-    nextBtn.title = @"下一步";
+    nextBtn.title = @"下一�?;
     nextBtn.bezelStyle = NSBezelStyleRounded;
     nextBtn.action = @selector(nextStep:);
     nextBtn.target = self;
     nextBtn.tag = 202;
     [contentView addSubview:nextBtn];
     
-    // 步骤指示器
+    // 步骤指示�?
     NSTextField *stepIndicator = [[NSTextField alloc] initWithFrame:NSMakeRect(230, 38, 100, 20)];
     stepIndicator.editable = NO;
     stepIndicator.bordered = NO;
@@ -102,11 +102,11 @@ static NSString * const kGuideCompletedKey = @"installationGuideCompleted";
         [subview removeFromSuperview];
     }
     
-    // 更新步骤指示器
+    // 更新步骤指示�?
     NSTextField *indicator = [_contentContainer.window.contentView viewWithTag:203];
     indicator.stringValue = [NSString stringWithFormat:@"步骤 %ld / 3", (long)(step + 1)];
     
-    // 更新按钮状态
+    // 更新按钮状�?
     NSButton *prevBtn = [_contentContainer.window.contentView viewWithTag:201];
     NSButton *nextBtn = [_contentContainer.window.contentView viewWithTag:202];
     
@@ -115,11 +115,11 @@ static NSString * const kGuideCompletedKey = @"installationGuideCompleted";
     switch (step) {
         case 0:
             [self buildStep1Welcome];
-            nextBtn.title = @"下一步";
+            nextBtn.title = @"下一�?;
             break;
         case 1:
             [self buildStep2Enable];
-            nextBtn.title = @"下一步";
+            nextBtn.title = @"下一�?;
             break;
         case 2:
             [self buildStep3Customize];
@@ -128,11 +128,11 @@ static NSString * const kGuideCompletedKey = @"installationGuideCompleted";
     }
 }
 
-#pragma mark - 步骤 1：欢迎
+#pragma mark - 步骤 1：欢�?
 
 - (void)buildStep1Welcome {
     NSTextField *desc = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 180, 500, 60)];
-    desc.stringValue = @"感谢安装拼音输入法！\n本引导将帮助您完成初始配置。";
+    desc.stringValue = @"感谢安装拼音输入法！\n本引导将帮助您完成初始配置�?;
     desc.font = [NSFont systemFontOfSize:14];
     desc.editable = NO;
     desc.bordered = NO;
@@ -142,11 +142,11 @@ static NSString * const kGuideCompletedKey = @"installationGuideCompleted";
     
     // 功能列表
     NSArray *features = @[
-        @"• 智能拼音输入，支持词组联想",
-        @"• 导入搜狗输入法词库（.scel 格式）",
-        @"• 模糊音支持（z/zh, c/ch, s/sh 等）",
-        @"• 用户词频自适应学习",
-        @"• 自定义短语（日期、时间等）",
+        @"�?智能拼音输入，支持词组联�?,
+        @"�?导入搜狗输入法词库（.scel 格式�?,
+        @"�?模糊音支持（z/zh, c/ch, s/sh 等）",
+        @"�?用户词频自适应学习",
+        @"�?自定义短语（日期、时间等�?,
     ];
     
     CGFloat y = 140;
@@ -175,11 +175,11 @@ static NSString * const kGuideCompletedKey = @"installationGuideCompleted";
     
     // 步骤说明
     NSArray *steps = @[
-        @"1. 打开「系统偏好设置」→「键盘」→「输入法」",
-        @"2. 点击左下角的「+」按钮",
-        @"3. 在列表中找到「拼音输入法」",
-        @"4. 点击「添加」按钮",
-        @"5. 确保勾选了「在菜单栏中显示输入法菜单」",
+        @"1. 打开「系统偏好设置」→「键盘」→「输入法�?,
+        @"2. 点击左下角的�?」按�?,
+        @"3. 在列表中找到「拼音输入法�?,
+        @"4. 点击「添加」按�?,
+        @"5. 确保勾选了「在菜单栏中显示输入法菜单�?,
     ];
     
     CGFloat y = 170;
@@ -217,7 +217,7 @@ static NSString * const kGuideCompletedKey = @"installationGuideCompleted";
     
     // 模糊音选项
     NSTextField *fuzzyTitle = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 170, 200, 20)];
-    fuzzyTitle.stringValue = @"模糊音设置（可选）：";
+    fuzzyTitle.stringValue = @"模糊音设置（可选）�?;
     fuzzyTitle.font = [NSFont boldSystemFontOfSize:13];
     fuzzyTitle.editable = NO;
     fuzzyTitle.bordered = NO;
@@ -237,7 +237,7 @@ static NSString * const kGuideCompletedKey = @"installationGuideCompleted";
     
     // 导入词库提示
     NSTextField *dictHint = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 40, 480, 40)];
-    dictHint.stringValue = @"提示：您可以随时通过菜单栏的输入法图标\n导入搜狗输入法的 .scel 词库文件来扩展词汇量。";
+    dictHint.stringValue = @"提示：您可以随时通过菜单栏的输入法图标\n导入搜狗输入法的 .scel 词库文件来扩展词汇量�?;
     dictHint.font = [NSFont systemFontOfSize:12];
     dictHint.textColor = [NSColor secondaryLabelColor];
     dictHint.editable = NO;
@@ -259,7 +259,7 @@ static NSString * const kGuideCompletedKey = @"installationGuideCompleted";
     if (_currentStep < 2) {
         [self showStep:_currentStep + 1];
     } else {
-        // 最后一步：保存设置并完成
+        // 最后一步：保存设置并完�?
         [self saveGuideSettings];
         [InstallationGuide markGuideCompleted];
         [self.window close];
@@ -274,7 +274,7 @@ static NSString * const kGuideCompletedKey = @"installationGuideCompleted";
 - (void)saveGuideSettings {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
-    // 保存模糊音设置
+    // 保存模糊音设�?
     NSArray *fuzzyKeys = @[@"fuzzyZ_ZH", @"fuzzyC_CH", @"fuzzyS_SH", @"fuzzyN_L", @"fuzzyF_H"];
     for (NSInteger i = 0; i < (NSInteger)fuzzyKeys.count; i++) {
         NSButton *checkbox = [_contentContainer viewWithTag:300 + i];

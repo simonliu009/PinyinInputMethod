@@ -1,6 +1,6 @@
 /*
- * PinyinInputMethod - macOS 拼音输入法
- * DictionaryDB.h - SQLite 数据库操作
+ * PinyinInputMethod - macOS 拼音输入�?
+ * DictionaryDB.h - SQLite 数据库操�?
  *
  * 负责词库数据的存储和查询
  */
@@ -10,19 +10,19 @@
 
 @interface DictionaryDB : NSObject
 
-/// 数据库文件路径
+/// 数据库文件路�?
 @property (nonatomic, copy) NSString *databasePath;
 
 /// 初始化数据库（如果不存在则创建）
 - (instancetype)initWithPath:(NSString *)path;
 
-/// 打开数据库
+/// 打开数据�?
 - (BOOL)open;
 
-/// 关闭数据库
+/// 关闭数据�?
 - (void)close;
 
-/// 创建表结构
+/// 创建表结�?
 - (BOOL)createTables;
 
 #pragma mark - 词条操作
@@ -46,7 +46,7 @@
 /// 删除词条
 - (BOOL)deleteWord:(NSString *)word pinyin:(NSString *)pinyin;
 
-/// 删除指定来源的所有词条
+/// 删除指定来源的所有词�?
 - (BOOL)deleteWordsWithSource:(NSInteger)source;
 
 #pragma mark - 用户习惯

@@ -97,7 +97,7 @@ $(APP_BUNDLE): $(OBJECTS)
 	@echo "  1. 将 $(APP_BUNDLE) 复制到 /Library/Input Methods/"
 	@echo "     sudo cp -R $(APP_BUNDLE) '/Library/Input Methods/'"
 	@echo "  2. 打开系统偏好设置 → 键盘 → 输入法"
-	@echo "  3. 点击 + 按钮，添加「拼音输入法」"
+	@echo "  3. 点击 + 按钮，添加「西蒙输入法」"
 
 clean:
 	rm -rf $(BUILD_DIR)
@@ -133,7 +133,7 @@ pkg: $(APP_BUNDLE)
 	@# 构建 pkg
 	pkgbuild --root $(PKG_ROOT) \
 		--scripts $(SCRIPTS_DIR) \
-		--identifier com.pinyin.inputmethod \
+		--identifier com.ximeng.inputmethod \
 		--version 1.0.0 \
 		--install-location / \
 		$(PKG_FILE)
