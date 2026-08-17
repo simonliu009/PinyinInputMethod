@@ -1,17 +1,17 @@
 /*
- * PinyinInputMethod - macOS 拼音输入�?
- * SogouSCelParser.m - 搜狗 .scel 文件解析器实�?
+ * PinyinInputMethod - macOS 拼音输入法
+ * SogouSCelParser.m - 搜狗 .scel 文件解析器实现
  *
- * 搜狗 .scel 文件格式�?
- * ┌─────────────────────────────�?
- * �?文件�?(0x40 bytes)         �? 包含魔法数字、版本号�?
- * ├─────────────────────────────�?
- * �?信息�?(名称/作�?描述�?    �? UTF-16LE 编码
- * ├─────────────────────────────�?
- * �?拼音�?(�?0x120 开�?      �? 拼音索引�?
- * ├─────────────────────────────�?
- * �?词条�?(�?0x2620 开�?     �? 实际词组数据
- * └─────────────────────────────�?
+ * 搜狗 .scel 文件格式：
+ * ┌─────────────────────────────┐
+ * │ 文件头 (0x40 bytes)         │  包含魔法数字、版本号等
+ * ├─────────────────────────────┤
+ * │ 信息区 (名称/作者/描述等)    │  UTF-16LE 编码
+ * ├─────────────────────────────┤
+ * │ 拼音表 (从 0x120 开始)      │  拼音索引表
+ * ├─────────────────────────────┤
+ * │ 词条区 (从 0x2620 开始)     │  实际词组数据
+ * └─────────────────────────────┘
  */
 
 #import "SogouSCelParser.h"
@@ -28,8 +28,8 @@
 @implementation SogouSCelParser
 
 // .scel 文件关键偏移
-static const NSUInteger kHeaderSize = 0x40;        // 文件头大�?
-static const NSUInteger kPinyinTableOffset = 0x120; // 拼音表起始偏�?
+static const NSUInteger kHeaderSize = 0x40;        // 文件头大小
+static const NSUInteger kPinyinTableOffset = 0x120; // 拼音表起始偏移
 static const NSUInteger kWordsOffset = 0x2620;      // 词条区起始偏移（默认值）
 
 // 魔法数字
@@ -47,31 +47,31 @@ static const uint32_t kMagicNumber = 0x00004D43;    // "MC\0\0"
     // 读取文件数据
     NSData *fileData = [NSData dataWithContentsOfFile:filePath];
     if (!fileData || fileData.length < kHeaderSize) {
-        NSLog(@"[SogouSCel] 无法读取文件或文件太�? %@", filePath);
+        NSLog(@"[SogouSCel] 无法读取文件或文件太小: %@", filePath);
         return nil;
     }
     
     const uint8_t *bytes = fileData.bytes;
     NSUInteger fileLen = fileData.length;
     
-    // 1. 验证文件�?
+    // 1. 验证文件头
     if (![self validateHeader:bytes length:fileLen]) {
         return nil;
     }
     
-    // 2. 解析拼音索引�?
+    // 2. 解析拼音索引表
     NSArray<NSString *> *pinyinTable = [self parsePinyinTable:bytes length:fileLen];
     if (!pinyinTable) {
-        NSLog(@"[SogouSCel] 拼音表解析失�?);
+        NSLog(@"[SogouSCel] 拼音表解析失败");
         return nil;
     }
     
-    NSLog(@"[SogouSCel] 拼音表解析完成，�?%lu 个拼�?, (unsigned long)pinyinTable.count);
+    NSLog(@"[SogouSCel] 拼音表解析完成，共 %lu 个拼音", (unsigned long)pinyinTable.count);
     
-    // 3. 确定词条区偏�?
+    // 3. 确定词条区偏移
     NSUInteger wordsStartOffset = kWordsOffset;
     if (fileLen > 0x2624) {
-        // 某些版本�?0x2620 处存储实际偏�?
+        // 某些版本在 0x2620 处存储实际偏移
         uint32_t customOffset;
         memcpy(&customOffset, bytes + 0x2620, 4);
         if (customOffset > 0 && customOffset < fileLen) {
@@ -85,13 +85,13 @@ static const uint32_t kMagicNumber = 0x00004D43;    // "MC\0\0"
     NSInteger parsedCount = 0;
     
     while (offset + 4 < fileLen) {
-        // 每个词条格式�?
-        // - 2 bytes: 拼音数量（每对拼音索引的个数�?
-        // - N * 2 bytes: 拼音索引（指向拼音表�?
+        // 每个词条格式：
+        // - 2 bytes: 拼音数量（每对拼音索引的个数）
+        // - N * 2 bytes: 拼音索引（指向拼音表）
         // - 2 bytes: 词语字节长度
-        // - N bytes: 词语数据（UTF-16LE�?
-        // - 2 bytes: 词条扩展信息长度（可能为 0�?
-        // - N bytes: 扩展信息（词频等�?
+        // - N bytes: 词语数据（UTF-16LE）
+        // - 2 bytes: 词条扩展信息长度（可能为 0）
+        // - N bytes: 扩展信息（词频等）
         
         // 读取拼音数量
         if (offset + 2 > fileLen) break;
@@ -100,7 +100,7 @@ static const uint32_t kMagicNumber = 0x00004D43;    // "MC\0\0"
         offset += 2;
         
         if (pinyinCount == 0 || pinyinCount > 50) {
-            // 无效数据，尝试寻找下一个有效词�?
+            // 无效数据，尝试寻找下一个有效词条
             break;
         }
         
@@ -135,7 +135,7 @@ static const uint32_t kMagicNumber = 0x00004D43;    // "MC\0\0"
         
         if (wordByteLen == 0 || wordByteLen > 200 || offset + wordByteLen > fileLen) break;
         
-        // 读取词语（UTF-16LE 编码�?
+        // 读取词语（UTF-16LE 编码）
         NSData *wordData = [NSData dataWithBytes:bytes + offset length:wordByteLen];
         NSString *word = [[NSString alloc] initWithData:wordData 
                                                encoding:NSUTF16LittleEndianStringEncoding];
@@ -176,7 +176,7 @@ static const uint32_t kMagicNumber = 0x00004D43;    // "MC\0\0"
         }
     }
     
-    NSLog(@"[SogouSCel] 词条解析完成，共 %lu �?, (unsigned long)words.count);
+    NSLog(@"[SogouSCel] 词条解析完成，共 %lu 条", (unsigned long)words.count);
     
     if (progressHandler) {
         progressHandler(1.0, words.count);
@@ -193,8 +193,8 @@ static const uint32_t kMagicNumber = 0x00004D43;    // "MC\0\0"
     
     NSMutableDictionary *info = [NSMutableDictionary dictionary];
     
-    // 读取词库名称（在文件头后的信息区�?
-    // 名称通常位于偏移 0x130 处，长度�?0x128 处指�?
+    // 读取词库名称（在文件头后的信息区）
+    // 名称通常位于偏移 0x130 处，长度在 0x128 处指定
     if (fileData.length > 0x130) {
         // 尝试读取名称长度
         uint32_t nameLen;
@@ -215,7 +215,7 @@ static const uint32_t kMagicNumber = 0x00004D43;    // "MC\0\0"
     return info;
 }
 
-#pragma mark - 文件头验�?
+#pragma mark - 文件头验证
 
 - (BOOL)validateHeader:(const uint8_t *)bytes length:(NSUInteger)length {
     if (length < kHeaderSize) {
@@ -223,28 +223,28 @@ static const uint32_t kMagicNumber = 0x00004D43;    // "MC\0\0"
         return NO;
     }
     
-    // 检查第一个字节是否为 'M' (0x4D) 或特定标�?
-    // 不同版本�?scel 可能有不同的头部标识
-    // 常见标识�?x43, 0x4D 或其�?
+    // 检查第一个字节是否为 'M' (0x4D) 或特定标识
+    // 不同版本的 scel 可能有不同的头部标识
+    // 常见标识：0x43, 0x4D 或其他
     
-    // 搜狗 scel 文件通常以特定字节序列开�?
+    // 搜狗 scel 文件通常以特定字节序列开头
     // 这里做宽松验证，主要检查文件大小和基本结构
     if (bytes[0] == 0x43 || bytes[0] == 0x4D || bytes[0] == 0x99) {
         return YES;
     }
     
-    // 尝试通过拼音表区域验�?
-    // 拼音表区域应该包含有效的 UTF-16LE 拼音字符�?
+    // 尝试通过拼音表区域验证
+    // 拼音表区域应该包含有效的 UTF-16LE 拼音字符串
     if (length > kPinyinTableOffset + 10) {
         // 检查拼音表区域是否有看起来像拼音的文本
         return YES;  // 宽松验证
     }
     
-    NSLog(@"[SogouSCel] 文件头验证失�?);
+    NSLog(@"[SogouSCel] 文件头验证失败");
     return NO;
 }
 
-#pragma mark - 拼音表解�?
+#pragma mark - 拼音表解析
 
 - (NSArray<NSString *> *)parsePinyinTable:(const uint8_t *)bytes length:(NSUInteger)length {
     if (length < kPinyinTableOffset + 4) return nil;
@@ -252,22 +252,22 @@ static const uint32_t kMagicNumber = 0x00004D43;    // "MC\0\0"
     NSMutableArray<NSString *> *pinyinTable = [NSMutableArray array];
     
     // 拼音表格式：
-    // 在偏�?kPinyinTableOffset 处开�?
-    // 每个条目�? 字节索引 + 1 字节拼音长度 + N 字节拼音文本
+    // 在偏移 kPinyinTableOffset 处开始
+    // 每个条目：2 字节索引 + 1 字节拼音长度 + N 字节拼音文本
     
     NSUInteger offset = kPinyinTableOffset;
     
-    // 读取拼音表条目数（某些版本在此处存储�?
-    // 如果没有明确的条目数，则通过遍历来确�?
+    // 读取拼音表条目数（某些版本在此处存储）
+    // 如果没有明确的条目数，则通过遍历来确定
     
-    // 尝试读取条目�?
+    // 尝试读取条目数
     uint16_t entryCount = 0;
     if (offset + 2 <= length) {
         memcpy(&entryCount, bytes + offset, 2);
         offset += 2;
     }
     
-    // 如果条目数看起来不合理，尝试另一种解析方�?
+    // 如果条目数看起来不合理，尝试另一种解析方式
     if (entryCount == 0 || entryCount > 1000) {
         // 直接遍历解析
         offset = kPinyinTableOffset;
@@ -284,7 +284,7 @@ static const uint32_t kMagicNumber = 0x00004D43;    // "MC\0\0"
             
             if (offset + pinyinLen > length) break;
             
-            // 读取拼音文本（ASCII�?
+            // 读取拼音文本（ASCII）
             NSString *pinyin = [[NSString alloc] initWithBytes:bytes + offset
                                                         length:pinyinLen
                                                       encoding:NSASCIIStringEncoding];
@@ -324,7 +324,7 @@ static const uint32_t kMagicNumber = 0x00004D43;    // "MC\0\0"
     return pinyinTable;
 }
 
-#pragma mark - 默认拼音�?
+#pragma mark - 默认拼音表
 
 - (NSArray<NSString *> *)defaultPinyinTable {
     // 标准拼音表（按搜狗索引顺序）

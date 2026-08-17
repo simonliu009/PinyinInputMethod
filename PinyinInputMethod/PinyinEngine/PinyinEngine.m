@@ -1,5 +1,5 @@
 /*
- * PinyinInputMethod - macOS 拼音输入�?
+ * PinyinInputMethod - macOS 拼音输入法
  * PinyinEngine.m - 拼音引擎主类实现
  */
 
@@ -32,10 +32,10 @@
         _ranker = [[CandidateRanker alloc] init];
         _fuzzyMatcher = [[FuzzyMatcher alloc] init];
         
-        // 从配置中读取模糊音设�?
+        // 从配置中读取模糊音设置
         _fuzzyEnabled = [[ConfigManager sharedManager] boolForKey:@"fuzzyEnabled" defaultValue:NO];
         
-        NSLog(@"[PinyinEngine] 拼音引擎已初始化，模糊音: %@", _fuzzyEnabled ? @"开�? : @"关闭");
+        NSLog(@"[PinyinEngine] 拼音引擎已初始化，模糊音: %@", _fuzzyEnabled ? @"开启" : @"关闭");
     }
     return self;
 }
@@ -72,7 +72,7 @@
     for (NSArray<NSString *> *pinyinParts in splitResults) {
         NSString *joinedPinyin = [pinyinParts componentsJoinedByString:@" "];
         
-        // 2a. 查找完整拼音组合对应的词�?
+        // 2a. 查找完整拼音组合对应的词组
         NSArray *words = [dictManager queryWordsWithPinyin:joinedPinyin];
         for (NSDictionary *wordDict in words) {
             CandidateWord *cw = [[CandidateWord alloc] init];
@@ -86,18 +86,18 @@
             [allCandidates addObject:cw];
         }
         
-        // 2b. 单字查找（每个拼音音节对应的单字�?
+        // 2b. 单字查找（每个拼音音节对应的单字）
         if (pinyinParts.count > 1) {
             for (NSString *singlePinyin in pinyinParts) {
                 NSArray *singleChars = [dictManager queryWordsWithPinyin:singlePinyin];
                 for (NSDictionary *wordDict in singleChars) {
                     NSString *word = wordDict[@"word"];
-                    // 只添加单字候�?
-                    if (word.length <= 2) {  // 允许单字和少量双�?
+                    // 只添加单字候选
+                    if (word.length <= 2) {  // 允许单字和少量双字
                         CandidateWord *cw = [[CandidateWord alloc] init];
                         cw.word = word;
                         cw.pinyin = wordDict[@"pinyin"];
-                        cw.frequency = [wordDict[@"frequency"] integerValue] / 2; // 降低单字优先�?
+                        cw.frequency = [wordDict[@"frequency"] integerValue] / 2; // 降低单字优先级
                         cw.source = [wordDict[@"source"] integerValue];
                         cw.score = [_ranker calculateScoreForCandidate:cw
                                                             inputPinyin:pinyin
@@ -122,7 +122,7 @@
                 cw.source = [wordDict[@"source"] integerValue];
                 cw.score = [_ranker calculateScoreForCandidate:cw
                                                     inputPinyin:pinyin
-                                                   pinyinParts:@[fuzzyPy]] * 0.7; // 模糊音降低得�?
+                                                   pinyinParts:@[fuzzyPy]] * 0.7; // 模糊音降低得分
                 [allCandidates addObject:cw];
             }
         }

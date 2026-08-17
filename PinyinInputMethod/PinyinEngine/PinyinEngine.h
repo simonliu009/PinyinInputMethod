@@ -1,5 +1,5 @@
 /*
- * PinyinInputMethod - macOS 拼音输入�?
+ * PinyinInputMethod - macOS 拼音输入法
  * PinyinEngine.h - 拼音引擎主类
  *
  * 负责拼音解析、候选词生成、排序和用户习惯学习
@@ -23,33 +23,33 @@
 
 @interface PinyinEngine : NSObject
 
-/// 拼音解析�?
+/// 拼音解析器
 @property (nonatomic, strong) PinyinParser *parser;
 
-/// 候选词排序�?
+/// 候选词排序器
 @property (nonatomic, strong) CandidateRanker *ranker;
 
 /// 模糊音匹配器
 @property (nonatomic, strong) FuzzyMatcher *fuzzyMatcher;
 
-/// 是否启用模糊�?
+/// 是否启用模糊音
 @property (nonatomic, assign) BOOL fuzzyEnabled;
 
-/// 初始化引�?
+/// 初始化引擎
 - (instancetype)init;
 
 /// 获取候选词列表
 - (NSArray<NSString *> *)getCandidatesForPinyin:(NSString *)pinyin
                                dictionaryManager:(DictionaryManager *)dictManager;
 
-/// 获取所有候选词（包含详细信息的 CandidateWord 对象�?
+/// 获取所有候选词（包含详细信息的 CandidateWord 对象）
 - (NSArray<CandidateWord *> *)getCandidateWordsForPinyin:(NSString *)pinyin
                                         dictionaryManager:(DictionaryManager *)dictManager;
 
 /// 记录用户选择（用于词频学习）
 - (void)recordUserSelection:(NSString *)pinyin word:(NSString *)word;
 
-/// 将拼音字符串拆分为合法拼音组�?
+/// 将拼音字符串拆分为合法拼音组合
 - (NSArray<NSArray<NSString *> *> *)splitPinyin:(NSString *)pinyin;
 
 @end

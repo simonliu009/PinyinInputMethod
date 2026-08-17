@@ -1,5 +1,5 @@
 /*
- * PinyinInputMethod - macOS 拼音输入�?
+ * PinyinInputMethod - macOS 拼音输入法
  * ConfigManager.m - 配置管理实现
  */
 
@@ -20,7 +20,7 @@ NSString * const kConfigFuzzyIn_In = @"fuzzyIn_In";
 NSString * const kConfigRememberMode = @"rememberMode";
 NSString * const kConfigSwitchKey = @"switchKey";
 
-static NSString * const kConfigDomain = @"com.ximeng.inputmethod.config";
+static NSString * const kConfigDomain = @"com.pinyin.inputmethod.config";
 
 static ConfigManager *sharedInstance = nil;
 
@@ -51,7 +51,7 @@ static ConfigManager *sharedInstance = nil;
 #pragma mark - 加载/保存
 
 - (void)loadConfig {
-    // �?NSUserDefaults 加载所有配置到缓存
+    // 从 NSUserDefaults 加载所有配置到缓存
     NSDictionary *allDefaults = [self defaultConfig];
     
     for (NSString *key in allDefaults) {
@@ -59,7 +59,7 @@ static ConfigManager *sharedInstance = nil;
         _cache[key] = value ?: allDefaults[key];
     }
     
-    NSLog(@"[ConfigManager] 配置已加载，�?%lu �?, (unsigned long)_cache.count);
+    NSLog(@"[ConfigManager] 配置已加载，共 %lu 项", (unsigned long)_cache.count);
 }
 
 - (void)saveConfig {
@@ -68,7 +68,7 @@ static ConfigManager *sharedInstance = nil;
     }
     [_defaults synchronize];
     
-    NSLog(@"[ConfigManager] 配置已保�?);
+    NSLog(@"[ConfigManager] 配置已保存");
 }
 
 - (void)resetToDefaults {
@@ -76,10 +76,10 @@ static ConfigManager *sharedInstance = nil;
     [_cache setDictionary:defaults];
     [self saveConfig];
     
-    // 通知观察�?
+    // 通知观察者
     [self notifyObservers];
     
-    NSLog(@"[ConfigManager] 配置已重置为默认�?);
+    NSLog(@"[ConfigManager] 配置已重置为默认值");
 }
 
 #pragma mark - 默认配置
@@ -159,7 +159,7 @@ static ConfigManager *sharedInstance = nil;
     [self notifyObservers];
 }
 
-#pragma mark - 观察�?
+#pragma mark - 观察者
 
 - (void)addChangeObserver:(id)observer selector:(SEL)selector {
     NSValue *observerValue = [NSValue valueWithNonretainedObject:observer];

@@ -1,5 +1,5 @@
 /*
- * PinyinInputMethod - macOS 拼音输入�?
+ * PinyinInputMethod - macOS 拼音输入法
  * FuzzyMatcher.m - 模糊音匹配器实现
  */
 
@@ -11,7 +11,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        // 从配置中加载模糊音设�?
+        // 从配置中加载模糊音设置
         ConfigManager *config = [ConfigManager sharedManager];
         _fuzzyZ_ZH  = [config boolForKey:@"fuzzyZ_ZH"  defaultValue:NO];
         _fuzzyC_CH  = [config boolForKey:@"fuzzyC_CH"  defaultValue:NO];
@@ -34,7 +34,7 @@
     
     // z/zh 模糊
     if (_fuzzyZ_ZH) {
-        // z -> zh 的映�?
+        // z -> zh 的映射
         [self addFuzzyPair:@"z" alternative:@"zh" toMap:map];
     }
     
@@ -72,7 +72,7 @@
     map[alt] = existing2;
 }
 
-#pragma mark - 模糊音替�?
+#pragma mark - 模糊音替代
 
 - (NSArray<NSString *> *)getFuzzyAlternativesForPinyin:(NSString *)pinyin {
     if (!pinyin || pinyin.length == 0) return @[];
@@ -175,7 +175,7 @@
         return one;
     }
     
-    return @"";  // 零声�?
+    return @"";  // 零声母
 }
 
 @end

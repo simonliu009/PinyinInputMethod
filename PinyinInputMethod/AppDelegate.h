@@ -1,6 +1,6 @@
 /*
- * PinyinInputMethod - macOS 拼音输入�?
- * AppDelegate.h - 应用代理头文�?
+ * PinyinInputMethod - macOS 拼音输入法
+ * AppDelegate.h - 应用代理头文件
  */
 
 #import <Cocoa/Cocoa.h>
@@ -15,10 +15,10 @@
 /// 输入法服务器实例
 @property (nonatomic, strong) IMKServer *server;
 
-/// 状态栏管理�?
+/// 状态栏管理器
 @property (nonatomic, strong) StatusBarItem *statusBarItem;
 
-/// 词库管理�?
+/// 词库管理器
 @property (nonatomic, strong) DictionaryManager *dictionaryManager;
 
 /// 获取全局单例

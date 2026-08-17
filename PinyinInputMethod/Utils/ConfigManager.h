@@ -1,8 +1,8 @@
 /*
- * PinyinInputMethod - macOS 拼音输入�?
+ * PinyinInputMethod - macOS 拼音输入法
  * ConfigManager.h - 配置管理
  *
- * 管理输入法的所有配置项，使�?NSUserDefaults 持久�?
+ * 管理输入法的所有配置项，使用 NSUserDefaults 持久化
  */
 
 #import <Foundation/Foundation.h>
@@ -18,7 +18,7 @@
 /// 保存配置
 - (void)saveConfig;
 
-/// 重置为默认配�?
+/// 重置为默认配置
 - (void)resetToDefaults;
 
 #pragma mark - 便捷读取方法

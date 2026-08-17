@@ -1,8 +1,8 @@
 /*
- * PinyinInputMethod - macOS 拼音输入�?
- * PinyinParser.m - 拼音解析器实�?
+ * PinyinInputMethod - macOS 拼音输入法
+ * PinyinParser.m - 拼音解析器实现
  *
- * 使用动态规划算法进行拼音拆分，结合拼音合法性校�?
+ * 使用动态规划算法进行拼音拆分，结合拼音合法性校验
  */
 
 #import "PinyinParser.h"
@@ -10,7 +10,7 @@
 @implementation PinyinParser {
     NSSet<NSString *> *_validPinyins;
     NSSet<NSString *> *_initials;
-    NSDictionary<NSString *, NSArray<NSString *> *> *_pinyinInitialMap; // 声母 -> 可能的后续拼�?
+    NSDictionary<NSString *, NSArray<NSString *> *> *_pinyinInitialMap; // 声母 -> 可能的后续拼音
 }
 
 - (instancetype)init {
@@ -21,7 +21,7 @@
     return self;
 }
 
-#pragma mark - 拼音表加�?
+#pragma mark - 拼音表加载
 
 - (void)loadPinyinTable {
     // 标准普通话所有合法拼音音节（共约 400 个）
@@ -114,7 +114,7 @@
     
     _validPinyins = [NSSet setWithArray:pinyinList];
     
-    // 声母�?
+    // 声母表
     NSArray *initialList = @[
         @"b", @"p", @"m", @"f",
         @"d", @"t", @"n", @"l",
@@ -126,7 +126,7 @@
     ];
     _initials = [NSSet setWithArray:initialList];
     
-    NSLog(@"[PinyinParser] 加载拼音表完成，�?%lu 个音�?, (unsigned long)pinyinList.count);
+    NSLog(@"[PinyinParser] 加载拼音表完成，共 %lu 个音节", (unsigned long)pinyinList.count);
 }
 
 - (NSSet<NSString *> *)validPinyins {
@@ -145,17 +145,17 @@
     NSString *lowerInput = [input lowercaseString];
     NSInteger len = lowerInput.length;
     
-    // dp[i] 存储从位�?i 到末尾的所有合法拆分方�?
+    // dp[i] 存储从位置 i 到末尾的所有合法拆分方案
     NSMutableDictionary<NSNumber *, NSMutableArray<NSArray<NSString *> *> *> *dp =
         [NSMutableDictionary dictionary];
     
-    // 从后往前填�?
+    // 从后往前填充
     dp[@(len)] = [NSMutableArray arrayWithObject:@[]];
     
     for (NSInteger i = len - 1; i >= 0; i--) {
         NSMutableArray<NSArray<NSString *> *> *splits = [NSMutableArray array];
         
-        // 尝试所有可能的拼音前缀（最�?6 个字符，�?"zhuang"�?
+        // 尝试所有可能的拼音前缀（最长 6 个字符，如 "zhuang"）
         NSInteger maxLen = MIN((NSInteger)6, len - i);
         for (NSInteger l = maxLen; l >= 1; l--) {
             NSString *prefix = [lowerInput substringWithRange:NSMakeRange(i, l)];
@@ -187,7 +187,7 @@
         return NSOrderedSame;
     }];
     
-    // 限制返回方案数量，避免过�?
+    // 限制返回方案数量，避免过多
     if (result.count > 20) {
         result = [result subarrayWithRange:NSMakeRange(0, 20)];
     }
@@ -227,7 +227,7 @@
         }
     }
     
-    return @"";  // 零声�?
+    return @"";  // 零声母
 }
 
 - (NSString *)getFinal:(NSString *)pinyin {

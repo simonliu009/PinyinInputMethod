@@ -1,5 +1,5 @@
 /*
- * PinyinInputMethod - macOS 拼音输入�?
+ * PinyinInputMethod - macOS 拼音输入法
  * CandidateWindow.m - 候选词窗口实现
  */
 
@@ -78,7 +78,7 @@ static const CGFloat kCornerRadius = 6.0;
         NSPoint textPoint = NSMakePoint(x, y + kItemPaddingV);
         [text drawAtPoint:textPoint withAttributes:attrs];
         
-        // 计算下一个位�?
+        // 计算下一个位置
         NSSize textSize = [text sizeWithAttributes:attrs];
         x += textSize.width + kCandidateSpacing + kItemPaddingH;
     }
@@ -100,7 +100,7 @@ static const CGFloat kCornerRadius = 6.0;
                               backing:NSBackingStoreBuffered
                                 defer:NO];
     if (self) {
-        // 窗口属�?
+        // 窗口属性
         [self setLevel:NSFloatingWindowLevel];
         [self setFloatingPanel:YES];
         [self setHidesOnDeactivate:NO];
@@ -154,7 +154,7 @@ static const CGFloat kCornerRadius = 6.0;
     CGFloat totalWidth = [self calculateTotalWidth:candidates];
     totalWidth = MAX(totalWidth + kCandidatePadding * 2, 100);
     
-    // 更新窗口大小和位�?
+    // 更新窗口大小和位置
     NSRect frame = NSMakeRect(position.x, position.y - kCandidateHeight - kCandidatePadding * 2 - 4,
                               totalWidth, kCandidateHeight + kCandidatePadding * 2);
     [self setFrame:frame display:YES];
@@ -219,7 +219,7 @@ static const CGFloat kCornerRadius = 6.0;
             [view setNeedsDisplay:YES];
             
             // 通知 InputController 选中了候选词
-            // 通过 NSNotification 传�?
+            // 通过 NSNotification 传递
             [[NSNotificationCenter defaultCenter] postNotificationName:@"CandidateSelected"
                                                                object:@(i)];
             break;

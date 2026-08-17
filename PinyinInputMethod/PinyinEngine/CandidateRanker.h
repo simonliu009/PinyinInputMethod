@@ -1,5 +1,5 @@
 /*
- * PinyinInputMethod - macOS 拼音输入�?
+ * PinyinInputMethod - macOS 拼音输入法
  * CandidateRanker.h - 候选词排序算法
  */
 
@@ -9,7 +9,7 @@
 
 @interface CandidateRanker : NSObject
 
-/// 计算候选词的综合得�?
+/// 计算候选词的综合得分
 - (double)calculateScoreForCandidate:(CandidateWord *)candidate
                          inputPinyin:(NSString *)inputPinyin
                          pinyinParts:(NSArray<NSString *> *)pinyinParts;

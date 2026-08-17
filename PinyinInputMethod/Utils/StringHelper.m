@@ -1,6 +1,6 @@
 /*
- * PinyinInputMethod - macOS 拼音输入�?
- * StringHelper.m - 字符串工具实�?
+ * PinyinInputMethod - macOS 拼音输入法
+ * StringHelper.m - 字符串工具实现
  */
 
 #import "StringHelper.h"

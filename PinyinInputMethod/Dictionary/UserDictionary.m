@@ -1,6 +1,6 @@
 /*
- * PinyinInputMethod - macOS 拼音输入�?
- * UserDictionary.m - 用户自定义词库实�?
+ * PinyinInputMethod - macOS 拼音输入法
+ * UserDictionary.m - 用户自定义词库实现
  */
 
 #import "UserDictionary.h"
@@ -42,16 +42,16 @@
         
         _storagePath = [dir stringByAppendingPathComponent:@"user_phrases.plist"];
         
-        // 加载已保存的自定义短�?
+        // 加载已保存的自定义短语
         [self loadCustomPhrases];
         
-        // 加载默认自定义短�?
+        // 加载默认自定义短语
         [self loadDefaultPhrases];
     }
     return self;
 }
 
-#pragma mark - 用户词操�?
+#pragma mark - 用户词操作
 
 - (BOOL)addWord:(NSString *)word pinyin:(NSString *)pinyin {
     return [[DictionaryManager sharedManager] addUserWord:word pinyin:pinyin];
@@ -65,7 +65,7 @@
     return [[DictionaryManager sharedManager] queryWordsWithPinyin:pinyin];
 }
 
-#pragma mark - 自定义短�?
+#pragma mark - 自定义短语
 
 - (BOOL)addCustomPhrase:(CustomPhrase *)phrase {
     if (!phrase.trigger || !phrase.phrase) return NO;
@@ -117,7 +117,7 @@
     return nil;
 }
 
-/// 解析动态短语（包含日期、时间等变量�?
+/// 解析动态短语（包含日期、时间等变量）
 - (NSString *)resolveDynamicPhrase:(NSString *)phrase {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     NSDate *now = [NSDate date];
@@ -125,7 +125,7 @@
     NSString *result = [phrase copy];
     
     // 替换日期时间变量
-    formatter.dateFormat = @"yyyy年MM月dd�?;
+    formatter.dateFormat = @"yyyy年MM月dd日";
     result = [result stringByReplacingOccurrencesOfString:@"$DATE"
                                                withString:[formatter stringFromDate:now]];
     
@@ -146,7 +146,7 @@
                                                withString:[formatter stringFromDate:now]];
     
     // 星期
-    NSArray *weekdays = @[@"星期�?, @"星期一", @"星期�?, @"星期�?, @"星期�?, @"星期�?, @"星期�?];
+    NSArray *weekdays = @[@"星期日", @"星期一", @"星期二", @"星期三", @"星期四", @"星期五", @"星期六"];
     NSCalendar *calendar = [NSCalendar currentCalendar];
     NSInteger weekday = [calendar component:NSCalendarUnitWeekday fromDate:now];
     result = [result stringByReplacingOccurrencesOfString:@"$WEEKDAY"
@@ -155,7 +155,7 @@
     return result;
 }
 
-#pragma mark - 持久�?
+#pragma mark - 持久化
 
 - (void)loadCustomPhrases {
     NSArray *saved = [NSArray arrayWithContentsOfFile:_storagePath];
@@ -168,7 +168,7 @@
             phrase.priority = [dict[@"priority"] integerValue];
             [_customPhrases addObject:phrase];
         }
-        NSLog(@"[UserDictionary] 加载�?%lu 条自定义短语", (unsigned long)_customPhrases.count);
+        NSLog(@"[UserDictionary] 加载了 %lu 条自定义短语", (unsigned long)_customPhrases.count);
     }
 }
 
@@ -186,16 +186,16 @@
 }
 
 - (void)loadDefaultPhrases {
-    // 如果已有自定义短语，不加载默认�?
+    // 如果已有自定义短语，不加载默认值
     if (_customPhrases.count > 0) return;
     
-    // 默认自定义短�?
+    // 默认自定义短语
     NSArray *defaults = @[
         @{@"trigger": @"rq", @"phrase": @"$DATE", @"comment": @"日期", @"priority": @100},
         @{@"trigger": @"sj", @"phrase": @"$TIME", @"comment": @"时间", @"priority": @100},
         @{@"trigger": @"xq", @"phrase": @"$WEEKDAY", @"comment": @"星期", @"priority": @90},
         @{@"trigger": @"dt", @"phrase": @"$DATETIME", @"comment": @"日期时间", @"priority": @80},
-        @{@"trigger": @"yj", @"phrase": @"$DATE_SHORT", @"comment": @"日期(�?", @"priority": @70},
+        @{@"trigger": @"yj", @"phrase": @"$DATE_SHORT", @"comment": @"日期(短)", @"priority": @70},
     ];
     
     for (NSDictionary *dict in defaults) {
@@ -217,7 +217,7 @@
     [text appendString:@"# 用户自定义词库导出\n"];
     [text appendString:@"# 格式：trigger=phrase#comment\n\n"];
     
-    // 导出用户�?
+    // 导出用户词
     [text appendString:@"## 用户词\n"];
     NSArray *userWords = [self queryWordsWithPinyin:@""];
     for (NSDictionary *word in userWords) {

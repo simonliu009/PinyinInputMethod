@@ -1,16 +1,16 @@
 /*
- * PinyinInputMethod - macOS 拼音输入�?
- * DictionaryDB.m - SQLite 数据库操作实�?
+ * PinyinInputMethod - macOS 拼音输入法
+ * DictionaryDB.m - SQLite 数据库操作实现
  */
 
 #import "DictionaryDB.h"
 
 @implementation DictionaryDB {
     sqlite3 *_db;
-    dispatch_queue_t _dbQueue;  // 串行队列，保证线程安�?
+    dispatch_queue_t _dbQueue;  // 串行队列，保证线程安全
 }
 
-#pragma mark - 初始�?
+#pragma mark - 初始化
 
 - (instancetype)initWithPath:(NSString *)path {
     self = [super init];
@@ -19,7 +19,7 @@
         _dbQueue = dispatch_queue_create("com.pinyin.dictionary.db", DISPATCH_QUEUE_SERIAL);
         
         if (![self open]) {
-            NSLog(@"[DictionaryDB] 错误：无法打开数据�?%@", path);
+            NSLog(@"[DictionaryDB] 错误：无法打开数据库 %@", path);
             return nil;
         }
         
@@ -35,7 +35,7 @@
     [self close];
 }
 
-#pragma mark - 数据库连�?
+#pragma mark - 数据库连接
 
 - (BOOL)open {
     __block BOOL success = NO;
@@ -43,7 +43,7 @@
     dispatch_sync(_dbQueue, ^{
         int result = sqlite3_open([self->_databasePath UTF8String], &self->_db);
         if (result != SQLITE_OK) {
-            NSLog(@"[DictionaryDB] 打开数据库失�? %s", sqlite3_errmsg(self->_db));
+            NSLog(@"[DictionaryDB] 打开数据库失败: %s", sqlite3_errmsg(self->_db));
             return;
         }
         
@@ -70,7 +70,7 @@
     });
 }
 
-#pragma mark - 表结�?
+#pragma mark - 表结构
 
 - (BOOL)createTables {
     __block BOOL success = NO;
@@ -109,7 +109,7 @@
         char *errMsg = NULL;
         int result = sqlite3_exec(self->_db, sql, NULL, NULL, &errMsg);
         if (result != SQLITE_OK) {
-            NSLog(@"[DictionaryDB] 创建表失�? %s", errMsg);
+            NSLog(@"[DictionaryDB] 创建表失败: %s", errMsg);
             sqlite3_free(errMsg);
             return;
         }
@@ -152,7 +152,7 @@
     __block BOOL success = NO;
     
     dispatch_sync(_dbQueue, ^{
-        // 开启事�?
+        // 开启事务
         sqlite3_exec(self->_db, "BEGIN TRANSACTION", NULL, NULL, NULL);
         
         const char *sql = "INSERT OR IGNORE INTO words (word, pinyin, frequency, source) VALUES (?, ?, ?, ?)";
@@ -183,7 +183,7 @@
         sqlite3_exec(self->_db, "COMMIT", NULL, NULL, NULL);
         success = YES;
         
-        NSLog(@"[DictionaryDB] 批量插入 %lu 条词�?, (unsigned long)words.count);
+        NSLog(@"[DictionaryDB] 批量插入 %lu 条词条", (unsigned long)words.count);
     });
     
     return success;

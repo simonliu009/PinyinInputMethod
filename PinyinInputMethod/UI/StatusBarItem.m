@@ -1,5 +1,5 @@
 /*
- * PinyinInputMethod - macOS 西蒙输入�?
+ * PinyinInputMethod - macOS 拼音输入法
  * StatusBarItem.m - 状态栏图标实现
  */
 
@@ -25,21 +25,21 @@ static NSString * const kActionQuit = @"quit";
 }
 
 - (void)setupStatusBar {
-    // 创建状态栏�?
+    // 创建状态栏项
     _statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength];
     
     // 设置按钮
     NSStatusBarButton *button = _statusItem.button;
-    button.title = @"�?;  // 中文模式标识
-    button.toolTip = @"西蒙输入�?- 中文模式";
+    button.title = @"拼";  // 中文模式标识
+    button.toolTip = @"拼音输入法 - 中文模式";
     button.action = @selector(statusBarClicked:);
     button.target = self;
     
     // 设置菜单
-    NSMenu *menu = [[NSMenu alloc] initWithTitle:@"西蒙输入�?];
+    NSMenu *menu = [[NSMenu alloc] initWithTitle:@"拼音输入法"];
     
     // 当前模式显示
-    NSMenuItem *modeItem = [[NSMenuItem alloc] initWithTitle:@"当前模式：中�?
+    NSMenuItem *modeItem = [[NSMenuItem alloc] initWithTitle:@"当前模式：中文"
                                                       action:nil
                                                keyEquivalent:@""];
     modeItem.tag = 100;
@@ -48,8 +48,8 @@ static NSString * const kActionQuit = @"quit";
     
     [menu addItem:[NSMenuItem separatorItem]];
     
-    // 切换中英�?
-    NSMenuItem *toggleItem = [[NSMenuItem alloc] initWithTitle:@"切换到英文模�?
+    // 切换中英文
+    NSMenuItem *toggleItem = [[NSMenuItem alloc] initWithTitle:@"切换到英文模式"
                                                         action:@selector(toggleInputMode:)
                                                  keyEquivalent:@""];
     toggleItem.target = self;
@@ -74,14 +74,14 @@ static NSString * const kActionQuit = @"quit";
     [menu addItem:[NSMenuItem separatorItem]];
     
     // 关于
-    NSMenuItem *aboutItem = [[NSMenuItem alloc] initWithTitle:@"关于西蒙输入�?
+    NSMenuItem *aboutItem = [[NSMenuItem alloc] initWithTitle:@"关于拼音输入法"
                                                        action:@selector(showAbout:)
                                                 keyEquivalent:@""];
     aboutItem.target = self;
     [menu addItem:aboutItem];
     
-    // 退�?
-    NSMenuItem *quitItem = [[NSMenuItem alloc] initWithTitle:@"退出西蒙输入法"
+    // 退出
+    NSMenuItem *quitItem = [[NSMenuItem alloc] initWithTitle:@"退出拼音输入法"
                                                       action:@selector(quitInputMethod:)
                                                keyEquivalent:@"q"];
     quitItem.target = self;
@@ -89,7 +89,7 @@ static NSString * const kActionQuit = @"quit";
     
     _statusItem.menu = menu;
     
-    NSLog(@"[StatusBarItem] 状态栏已设�?);
+    NSLog(@"[StatusBarItem] 状态栏已设置");
 }
 
 - (void)updateStatusIcon {
@@ -102,16 +102,16 @@ static NSString * const kActionQuit = @"quit";
     
     switch (mode) {
         case InputModeChinese:
-            button.title = @"�?;
-            button.toolTip = @"西蒙输入�?- 中文模式";
+            button.title = @"拼";
+            button.toolTip = @"拼音输入法 - 中文模式";
             break;
         case InputModeEnglish:
             button.title = @"En";
-            button.toolTip = @"西蒙输入�?- 英文模式";
+            button.toolTip = @"拼音输入法 - 英文模式";
             break;
         case InputModeFullWidth:
-            button.title = @"�?;
-            button.toolTip = @"西蒙输入�?- 全角模式";
+            button.title = @"全";
+            button.toolTip = @"拼音输入法 - 全角模式";
             break;
     }
     
@@ -126,13 +126,13 @@ static NSString * const kActionQuit = @"quit";
             case InputModeFullWidth: modeName = @"全角"; break;
             default: modeName = @"未知"; break;
         }
-        modeItem.title = [NSString stringWithFormat:@"当前模式�?@", modeName];
+        modeItem.title = [NSString stringWithFormat:@"当前模式：%@", modeName];
     }
     
-    // 更新切换菜单项文�?
-    NSMenuItem *toggleItem = [menu itemAtIndex:3]; // 切换模式�?
+    // 更新切换菜单项文本
+    NSMenuItem *toggleItem = [menu itemAtIndex:3]; // 切换模式项
     if (toggleItem) {
-        toggleItem.title = (mode == InputModeChinese) ? @"切换到英文模�? : @"切换到中文模�?;
+        toggleItem.title = (mode == InputModeChinese) ? @"切换到英文模式" : @"切换到中文模式";
     }
 }
 
@@ -146,7 +146,7 @@ static NSString * const kActionQuit = @"quit";
 #pragma mark - 菜单动作
 
 - (void)statusBarClicked:(id)sender {
-    // 点击状态栏图标时切换模�?
+    // 点击状态栏图标时切换模式
     [self toggleInputMode:sender];
 }
 
@@ -191,15 +191,15 @@ static NSString * const kActionQuit = @"quit";
     
     // 异步导入
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        // TODO: 调用 DictionaryManager 的导入方�?
-        NSLog(@"[StatusBarItem] 开始导入词�? %@", fileURL.path);
+        // TODO: 调用 DictionaryManager 的导入方法
+        NSLog(@"[StatusBarItem] 开始导入词库: %@", fileURL.path);
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [alert.window close];
             
             NSAlert *doneAlert = [[NSAlert alloc] init];
             doneAlert.messageText = @"词库导入完成";
-            doneAlert.informativeText = @"搜狗词库已成功导�?;
+            doneAlert.informativeText = @"搜狗词库已成功导入";
             doneAlert.alertStyle = NSAlertStyleInformational;
             [doneAlert beginSheetModalForWindow:[NSApp mainWindow] completionHandler:nil];
         });
@@ -208,15 +208,15 @@ static NSString * const kActionQuit = @"quit";
 
 - (void)showAbout:(id)sender {
     NSAlert *alert = [[NSAlert alloc] init];
-    alert.messageText = @"西蒙输入�?v1.0.0";
+    alert.messageText = @"拼音输入法 v1.0.0";
     alert.informativeText = @"一款支持搜狗词库导入的 macOS 拼音输入法\n\n"
                            @"功能特点：\n"
-                           @"�?智能拼音输入\n"
-                           @"�?搜狗 .scel 词库导入\n"
-                           @"�?模糊音支持\n"
-                           @"�?用户词频自适应\n"
-                           @"�?自定义短语\n\n"
-                           @"兼容 macOS 11.0 (Big Sur) 及以�?;
+                           @"• 智能拼音输入\n"
+                           @"• 搜狗 .scel 词库导入\n"
+                           @"• 模糊音支持\n"
+                           @"• 用户词频自适应\n"
+                           @"• 自定义短语\n\n"
+                           @"兼容 macOS 11.0 (Big Sur) 及以上";
     alert.alertStyle = NSAlertStyleInformational;
     [alert runModal];
 }

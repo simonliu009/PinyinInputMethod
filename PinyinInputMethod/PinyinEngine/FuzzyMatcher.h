@@ -1,15 +1,15 @@
 /*
- * PinyinInputMethod - macOS 拼音输入�?
+ * PinyinInputMethod - macOS 拼音输入法
  * FuzzyMatcher.h - 模糊音匹配器
  *
- * 处理常见模糊音情况，�?z/zh, c/ch, s/sh, n/l, f/h �?
+ * 处理常见模糊音情况，如 z/zh, c/ch, s/sh, n/l, f/h 等
  */
 
 #import <Foundation/Foundation.h>
 
 @interface FuzzyMatcher : NSObject
 
-/// 模糊音映射表（可配置�?
+/// 模糊音映射表（可配置）
 @property (nonatomic, strong) NSDictionary<NSString *, NSArray<NSString *> *> *fuzzyMap;
 
 /// 是否启用 z/zh 模糊
@@ -36,13 +36,13 @@
 /// 是否启用 in/ing 模糊
 @property (nonatomic, assign) BOOL fuzzyIn_In;
 
-/// 初始�?
+/// 初始化
 - (instancetype)init;
 
 /// 获取给定拼音的模糊音替代列表
 - (NSArray<NSString *> *)getFuzzyAlternativesForPinyin:(NSString *)pinyin;
 
-/// 检查两个拼音是否属于模糊音�?
+/// 检查两个拼音是否属于模糊音对
 - (BOOL)isFuzzyMatch:(NSString *)pinyin1 withPinyin:(NSString *)pinyin2;
 
 @end

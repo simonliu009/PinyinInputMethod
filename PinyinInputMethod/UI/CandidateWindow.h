@@ -1,15 +1,15 @@
 /*
- * PinyinInputMethod - macOS 拼音输入�?
+ * PinyinInputMethod - macOS 拼音输入法
  * CandidateWindow.h - 候选词窗口
  *
- * 浮动候选词窗口，跟随光标位置显�?
+ * 浮动候选词窗口，跟随光标位置显示
  */
 
 #import <Cocoa/Cocoa.h>
 
 @interface CandidateWindow : NSPanel
 
-/// 候选词列表（已格式化的显示文本�?
+/// 候选词列表（已格式化的显示文本）
 @property (nonatomic, strong) NSArray<NSString *> *candidates;
 
 /// 当前选中索引
@@ -18,7 +18,7 @@
 /// 当前页码
 @property (nonatomic, assign) NSInteger currentPage;
 
-/// 总页�?
+/// 总页数
 @property (nonatomic, assign) NSInteger totalPages;
 
 /// 候选词字体
@@ -30,16 +30,16 @@
 /// 背景颜色
 @property (nonatomic, copy) NSColor *candidateBackgroundColor;
 
-/// 选中项背景颜�?
+/// 选中项背景颜色
 @property (nonatomic, strong) NSColor *selectedBackgroundColor;
 
 /// 文字颜色
 @property (nonatomic, strong) NSColor *textColor;
 
-/// 选中项文字颜�?
+/// 选中项文字颜色
 @property (nonatomic, strong) NSColor *selectedTextColor;
 
-/// 初始�?
+/// 初始化
 - (instancetype)init;
 
 /// 显示候选词

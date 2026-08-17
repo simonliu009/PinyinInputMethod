@@ -1,5 +1,5 @@
 /*
- * PinyinInputMethod - macOS 西蒙输入�?
+ * PinyinInputMethod - macOS 拼音输入法
  * AppDelegate.m - 应用代理实现
  */
 
@@ -13,7 +13,7 @@
 static AppDelegate *sharedInstance = nil;
 
 // 输入法服务器连接名称
-static NSString * const kConnectionName = @"com.ximeng.inputmethod.connection";
+static NSString * const kConnectionName = @"com.pinyin.inputmethod.connection";
 
 @implementation AppDelegate
 
@@ -32,7 +32,7 @@ static NSString * const kConnectionName = @"com.ximeng.inputmethod.connection";
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification {
-    NSLog(@"[PinyinInputMethod] 应用启动�?..");
+    NSLog(@"[PinyinInputMethod] 应用启动中...");
     
     // 初始化配置管理器
     [[ConfigManager sharedManager] loadConfig];
@@ -47,7 +47,7 @@ static NSString * const kConnectionName = @"com.ximeng.inputmethod.connection";
                              bundleIdentifier:bundleID];
     
     if (_server) {
-        NSLog(@"[PinyinInputMethod] 输入法服务器已成功启�?);
+        NSLog(@"[PinyinInputMethod] 输入法服务器已成功启动");
         NSLog(@"[PinyinInputMethod] Bundle ID: %@", bundleID);
         NSLog(@"[PinyinInputMethod] 连接名称: %@", kConnectionName);
     } else {
@@ -59,7 +59,7 @@ static NSString * const kConnectionName = @"com.ximeng.inputmethod.connection";
     _statusBarItem = [[StatusBarItem alloc] initWithServer:_server];
     [_statusBarItem setupStatusBar];
     
-    // 首次运行时显示安装引�?
+    // 首次运行时显示安装引导
     if ([InstallationGuide shouldShowGuide]) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)),
                        dispatch_get_main_queue(), ^{
@@ -68,16 +68,16 @@ static NSString * const kConnectionName = @"com.ximeng.inputmethod.connection";
         });
     }
     
-    NSLog(@"[PinyinInputMethod] 初始化完�?);
+    NSLog(@"[PinyinInputMethod] 初始化完成");
 }
 
 - (void)applicationWillTerminate:(NSNotification *)notification {
-    NSLog(@"[PinyinInputMethod] 应用即将退�?);
+    NSLog(@"[PinyinInputMethod] 应用即将退出");
     
     // 保存配置
     [[ConfigManager sharedManager] saveConfig];
     
-    // 关闭数据�?
+    // 关闭数据库
     [_dictionaryManager closeDatabases];
     
     // 清理状态栏
@@ -85,7 +85,7 @@ static NSString * const kConnectionName = @"com.ximeng.inputmethod.connection";
 }
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender {
-    // 输入法不应在关闭窗口后退�?
+    // 输入法不应在关闭窗口后退出
     return NO;
 }
 
@@ -99,17 +99,17 @@ static NSString * const kConnectionName = @"com.ximeng.inputmethod.connection";
 }
 
 - (void)quitInputMethod:(id)sender {
-    // 保存当前状�?
+    // 保存当前状态
     [[ConfigManager sharedManager] saveConfig];
     
-    // 退出应�?
+    // 退出应用
     [NSApp terminate:self];
 }
 
 #pragma mark - 菜单构建
 
 - (NSMenu *)applicationDockMenu:(NSApplication *)sender {
-    NSMenu *menu = [[NSMenu alloc] initWithTitle:@"西蒙输入�?];
+    NSMenu *menu = [[NSMenu alloc] initWithTitle:@"拼音输入法"];
     
     [menu addItemWithTitle:@"偏好设置..." 
                     action:@selector(showPreferences:) 
@@ -117,7 +117,7 @@ static NSString * const kConnectionName = @"com.ximeng.inputmethod.connection";
     
     [menu addItem:[NSMenuItem separatorItem]];
     
-    [menu addItemWithTitle:@"退出西蒙输入法" 
+    [menu addItemWithTitle:@"退出拼音输入法" 
                     action:@selector(quitInputMethod:) 
              keyEquivalent:@"q"];
     

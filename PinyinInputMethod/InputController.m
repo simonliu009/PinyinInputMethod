@@ -1,8 +1,8 @@
 /*
- * PinyinInputMethod - macOS 拼音输入�?
- * InputController.m - IMK 输入控制器实�?
+ * PinyinInputMethod - macOS 拼音输入法
+ * InputController.m - IMK 输入控制器实现
  *
- * 核心输入控制器，处理键盘事件、管理输入状态、协调拼音引擎和候选窗�?
+ * 核心输入控制器，处理键盘事件、管理输入状态、协调拼音引擎和候选窗口
  */
 
 #import "InputController.h"
@@ -20,7 +20,7 @@ static InputController *currentInstance = nil;
 
 @implementation InputController
 
-#pragma mark - 初始�?
+#pragma mark - 初始化
 
 - (instancetype)initWithServer:(IMKServer *)server
                     client:(id)client
@@ -29,7 +29,7 @@ static InputController *currentInstance = nil;
     if (self) {
         currentInstance = self;
         
-        // 初始化状�?
+        // 初始化状态
         _inputMode = InputModeChinese;
         _isComposing = NO;
         _currentPage = 0;
@@ -39,16 +39,16 @@ static InputController *currentInstance = nil;
         // 初始化拼音字符串
         _currentPinyin = [NSMutableString stringWithCapacity:32];
         
-        // 初始化拼音引�?
+        // 初始化拼音引擎
         _pinyinEngine = [[PinyinEngine alloc] init];
         
-        // 获取词库管理�?
+        // 获取词库管理器
         _dictionaryManager = [AppDelegate sharedAppDelegate].dictionaryManager;
         
-        // 初始化候选窗�?
+        // 初始化候选窗口
         _candidateWindow = [[CandidateWindow alloc] init];
         
-        NSLog(@"[InputController] 控制器已初始�?);
+        NSLog(@"[InputController] 控制器已初始化");
     }
     return self;
 }
@@ -57,10 +57,10 @@ static InputController *currentInstance = nil;
     return currentInstance;
 }
 
-#pragma mark - 服务器生命周�?
+#pragma mark - 服务器生命周期
 
 - (void)activateServer:(NSNotification *)notification {
-    NSLog(@"[InputController] 输入法已激�?);
+    NSLog(@"[InputController] 输入法已激活");
     
     // 从配置中恢复输入模式
     NSInteger savedMode = [[ConfigManager sharedManager] integerForKey:@"inputMode" 
@@ -77,7 +77,7 @@ static InputController *currentInstance = nil;
         [self resetComposition];
     }
     
-    // 隐藏候选窗�?
+    // 隐藏候选窗口
     [_candidateWindow orderOut:nil];
 }
 
@@ -87,15 +87,15 @@ static InputController *currentInstance = nil;
               key:(NSInteger)keyCode 
         modifiers:(NSEventModifierFlags)flags
 {
-    // 忽略修饰键单独按�?
+    // 忽略修饰键单独按下
     if (flags & (NSEventModifierFlagCommand | NSEventModifierFlagControl | NSEventModifierFlagOption)) {
-        return NO;  // 让系统处�?
+        return NO;  // 让系统处理
     }
     
     // Shift 键切换中英文模式
     if (keyCode == 56 || keyCode == 60) {  // Left/Right Shift
         if (!(flags & NSEventModifierFlagShift)) {
-            // Shift 释放时切�?
+            // Shift 释放时切换
             [self toggleInputMode];
             return YES;
         }
@@ -121,7 +121,7 @@ static InputController *currentInstance = nil;
                    keyCode:(NSInteger)keyCode 
                  modifiers:(NSEventModifierFlags)flags
 {
-    // 英文模式下直接传递字�?
+    // 英文模式下直接传递字符
     if (inputString.length > 0 && keyCode < 128) {
         [self commitText:inputString];
         return YES;
@@ -149,15 +149,15 @@ static InputController *currentInstance = nil;
             return [self handleForwardDelete];
     }
     
-    // 处理翻页�?
-    if (keyCode == 0x21) {  // Page Up / [ 键（部分键盘�?
+    // 处理翻页键
+    if (keyCode == 0x21) {  // Page Up / [ 键（部分键盘）
         return [self handlePageUp];
     }
-    if (keyCode == 0x1E) {  // Page Down / ] �?
+    if (keyCode == 0x1E) {  // Page Down / ] 键
         return [self handlePageDown];
     }
     
-    // 处理数字键选词�?-9�?
+    // 处理数字键选词（1-9）
     if (_isComposing && keyCode >= 0x12 && keyCode <= 0x1A) {
         NSInteger index = keyCode - 0x12;  // 1->0, 2->1, ..., 9->8
         return [self handleCandidateSelection:index];
@@ -167,7 +167,7 @@ static InputController *currentInstance = nil;
     if (inputString.length > 0) {
         unichar ch = [inputString characterAtIndex:0];
         
-        // 只处理小写字�?
+        // 只处理小写字母
         if (ch >= 'a' && ch <= 'z') {
             [_currentPinyin appendString:inputString];
             _isComposing = YES;
@@ -199,7 +199,7 @@ static InputController *currentInstance = nil;
                    modifiers:(NSEventModifierFlags)flags
 {
     if (inputString.length > 0 && keyCode < 128) {
-        // 转换为全角字�?
+        // 转换为全角字符
         NSString *fullWidth = [self convertToFullWidth:inputString];
         [self commitText:fullWidth];
         return YES;
@@ -220,7 +220,7 @@ static InputController *currentInstance = nil;
 
 - (BOOL)handleReturn {
     if (_isComposing) {
-        // 回车时直接提交拼音原�?
+        // 回车时直接提交拼音原文
         [self commitText:[_currentPinyin copy]];
         [self resetComposition];
         [self hideCandidateWindow];
@@ -247,7 +247,7 @@ static InputController *currentInstance = nil;
             [self resetComposition];
             [self hideCandidateWindow];
         } else {
-            // 没有候选词，提交拼�?
+            // 没有候选词，提交拼音
             [self commitText:[_currentPinyin copy]];
             [self resetComposition];
         }
@@ -276,8 +276,8 @@ static InputController *currentInstance = nil;
 }
 
 - (BOOL)handleForwardDelete {
-    // Forward delete �?backspace 类似，但删除后面的字�?
-    // 简化处理：�?backspace 相同
+    // Forward delete 与 backspace 类似，但删除后面的字符
+    // 简化处理：与 backspace 相同
     return [self handleBackspace];
 }
 
@@ -333,7 +333,7 @@ static InputController *currentInstance = nil;
     // 更新当前页候选词
     _currentPageCandidates = [self candidatesForPage:_currentPage fromAll:candidates];
     
-    // 更新候选窗口显�?
+    // 更新候选窗口显示
     if (_currentPageCandidates.count > 0) {
         [self showCandidateWindow];
     } else {
@@ -345,7 +345,7 @@ static InputController *currentInstance = nil;
 }
 
 - (void)updateCurrentPageCandidates {
-    // 重新获取所有候选词并翻�?
+    // 重新获取所有候选词并翻页
     NSArray *allCandidates = [_pinyinEngine getCandidatesForPinyin:_currentPinyin
                                                   dictionaryManager:_dictionaryManager];
     _currentPageCandidates = [self candidatesForPage:_currentPage fromAll:allCandidates];
@@ -374,14 +374,14 @@ static InputController *currentInstance = nil;
     return [allCandidates subarrayWithRange:NSMakeRange(start, end - start)];
 }
 
-#pragma mark - 预编辑文�?
+#pragma mark - 预编辑文本
 
 - (void)updatePreeditText {
     if (!_isComposing) return;
     
     id client = [self client];
     
-    // 设置高亮属�?
+    // 设置高亮属性
     NSDictionary *attrs = @{
         NSUnderlineStyleAttributeName: @(NSUnderlineStyleSingle),
         NSFontAttributeName: [NSFont systemFontOfSize:14]
@@ -423,7 +423,7 @@ static InputController *currentInstance = nil;
     }
 }
 
-#pragma mark - 状态管�?
+#pragma mark - 状态管理
 
 - (void)resetComposition {
     [_currentPinyin setString:@""];
@@ -460,10 +460,10 @@ static InputController *currentInstance = nil;
         [self hideCandidateWindow];
     }
     
-    NSLog(@"[InputController] 输入模式切换�? %ld", (long)_inputMode);
+    NSLog(@"[InputController] 输入模式切换为: %ld", (long)_inputMode);
 }
 
-#pragma mark - 候选窗口管�?
+#pragma mark - 候选窗口管理
 
 - (void)showCandidateWindow {
     if (_currentPageCandidates.count == 0) {
@@ -526,23 +526,23 @@ static InputController *currentInstance = nil;
 }
 
 - (NSString *)convertPunctuation:(unichar)ch {
-    // 半角标点转全�?
+    // 半角标点转全角
     static NSDictionary *punctMap = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         punctMap = @{
-            @",": @"�?,
-            @".": @"�?,
-            @"!": @"�?,
-            @"?": @"�?,
-            @";": @"�?,
-            @":": @"�?,
-            @"(": @"�?,
-            @")": @"�?,
-            @"[": @"�?,
-            @"]": @"�?,
-            @"<": @"�?,
-            @">": @"�?,
+            @",": @"，",
+            @".": @"。",
+            @"!": @"！",
+            @"?": @"？",
+            @";": @"；",
+            @":": @"：",
+            @"(": @"（",
+            @")": @"）",
+            @"[": @"【",
+            @"]": @"】",
+            @"<": @"《",
+            @">": @"》",
         };
     });
     
@@ -556,10 +556,10 @@ static InputController *currentInstance = nil;
     for (NSUInteger i = 0; i < text.length; i++) {
         unichar ch = [text characterAtIndex:i];
         if (ch >= 0x21 && ch <= 0x7E) {
-            // ASCII 可见字符转全�?
+            // ASCII 可见字符转全角
             [result appendFormat:@"%C", (unichar)(ch + 0xFEE0)];
         } else if (ch == 0x20) {
-            // 空格转全角空�?
+            // 空格转全角空格
             [result appendFormat:@"%C", (unichar)0x3000];
         } else {
             [result appendFormat:@"%C", ch];
@@ -568,7 +568,7 @@ static InputController *currentInstance = nil;
     return result;
 }
 
-#pragma mark - IMK 状态查�?
+#pragma mark - IMK 状态查询
 
 - (NSArray *)validAttributesForMarkedText {
     return @[

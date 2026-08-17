@@ -1,6 +1,6 @@
 /*
- * PinyinInputMethod - macOS 拼音输入�?
- * CandidateCell.m - 候选词单元格实�?
+ * PinyinInputMethod - macOS 拼音输入法
+ * CandidateCell.m - 候选词单元格实现
  */
 
 #import "CandidateCell.h"
