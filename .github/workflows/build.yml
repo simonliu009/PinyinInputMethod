@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     name: Build on macOS
-    runs-on: macos-13
+    runs-on: macos-latest
     
     steps:
     - name: Checkout
@@ -23,6 +23,10 @@ jobs:
         echo "macOS version: $(sw_vers -productVersion)"
         echo "Xcode version: $(xcodebuild -version)"
         echo "clang version: $(clang --version | head -1)"
+    
+    - name: Generate Xcode project
+      run: |
+        ruby Tools/DictionaryBuilder/create_xcode_project.rb
     
     - name: Build with Make
       run: |
@@ -115,7 +119,7 @@ jobs:
 
   lint:
     name: Code Quality Check
-    runs-on: macos-13
+    runs-on: macos-latest
     
     steps:
     - name: Checkout
