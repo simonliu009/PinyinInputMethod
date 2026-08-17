@@ -7,6 +7,7 @@
 
 #import "PreferencesWindow.h"
 #import "ConfigManager.h"
+#import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 
 @implementation PreferencesWindow
 
@@ -272,7 +273,7 @@
     textView.richText = NO;
     textView.font = [NSFont monospacedSystemFontOfSize:12 weight:NSFontWeightRegular];
     textView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
-    textView.tag = 401;
+    textView.identifier = @"customTextView";
     
     [scrollView setDocumentView:textView];
     [view addSubview:scrollView];
@@ -320,7 +321,7 @@
 
 - (IBAction)importSogouDict:(id)sender {
     NSOpenPanel *panel = [NSOpenPanel openPanel];
-    panel.allowedContentTypes = @[@"public.data"];
+    panel.allowedContentTypes = @[[UTType typeWithIdentifier:@"public.data"]];
     panel.canChooseFiles = YES;
     panel.canChooseDirectories = NO;
     panel.title = @"选择搜狗词库文件";
@@ -334,7 +335,7 @@
 
 - (IBAction)exportDictionary:(id)sender {
     NSSavePanel *panel = [NSSavePanel savePanel];
-    panel.allowedContentTypes = @[@"public.plain-text"];
+    panel.allowedContentTypes = @[[UTType typeWithIdentifier:@"public.plain-text"]];
     panel.nameFieldStringValue = @"pinyin_dictionary.txt";
     
     [panel beginSheetModalForWindow:self.window completionHandler:^(NSInteger result) {
@@ -348,7 +349,7 @@
     NSAlert *alert = [[NSAlert alloc] init];
     alert.messageText = @"确认清空";
     alert.informativeText = @"确定要清空所有搜狗导入的词库吗？此操作不可撤销。";
-    alert.style = NSAlertStyleWarning;
+    alert.alertStyle = NSAlertStyleWarning;
     [alert addButtonWithTitle:@"清空"];
     [alert addButtonWithTitle:@"取消"];
     
