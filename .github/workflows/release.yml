@@ -41,9 +41,19 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        gh release create ${{ github.ref_name }} \
-          build/PinyinInputMethod.pkg \
-          build/PinyinInputMethod.zip \
-          --title "Release ${{ github.ref_name }}" \
-          --notes "macOS 拼音输入法安装包\n\n- **PinyinInputMethod.pkg** - 双击安装（推荐）\n- **PinyinInputMethod.zip** - 免安装版本" \
-          --repo ${{ github.repository }}
+        for i in 1 2 3; do
+          echo "Attempt $i..."
+          if gh release create ${{ github.ref_name }} \
+            build/PinyinInputMethod.pkg \
+            build/PinyinInputMethod.zip \
+            --title "Release ${{ github.ref_name }}" \
+            --notes "macOS 西蒙输入法安装包\n\n- **PinyinInputMethod.pkg** - 双击安装（推荐）\n- **PinyinInputMethod.zip** - 免安装版本" \
+            --repo ${{ github.repository }}; then
+            echo "Release created successfully!"
+            exit 0
+          fi
+          echo "Attempt $i failed, waiting 30s..."
+          sleep 30
+        done
+        echo "All attempts failed"
+        exit 1
