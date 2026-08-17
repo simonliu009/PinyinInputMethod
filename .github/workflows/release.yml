@@ -1,0 +1,41 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build and Release
+    runs-on: macos-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    
+    - name: Select Xcode
+      run: |
+        sudo xcode-select -s /Applications/Xcode.app/Contents/Developer || true
+        xcode-select -p
+    
+    - name: Build
+      run: make all
+      env:
+        MACOSX_DEPLOYMENT_TARGET: "11.0"
+    
+    - name: Package app
+      run: |
+        cd build
+        zip -r PinyinInputMethod.zip PinyinInputMethod.app
+    
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: build/PinyinInputMethod.zip
+        generate_release_notes: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
