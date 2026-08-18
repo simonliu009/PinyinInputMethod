@@ -38,7 +38,7 @@
     <key>InputMethodServerControllerClass</key>
     <string>InputController</string>
     
-    <!-- 输入法模式列表 -->
+    <!-- 输入法模式列表（顶层） -->
     <key>tsInputModeListKey</key>
     <dict>
         <key>com.ximeng.inputmethod.pinyin</key>
@@ -57,6 +57,23 @@
             <string>menuicon.png</string>
             <key>tsInputModeAlternateMenuIconFileKey</key>
             <string>menuicon.png</string>
+        </dict>
+    </dict>
+    
+    <!-- 输入法能力声明（ComponentInputModeDict） -->
+    <key>ComponentInputModeDict</key>
+    <dict>
+        <key>tsInputModeListKey</key>
+        <dict>
+            <key>com.ximeng.inputmethod.pinyin</key>
+            <dict>
+                <key>tsInputModeScriptKey</key>
+                <string>smpl</string>
+                <key>tsInputModePrimaryInScriptKey</key>
+                <true/>
+                <key>tsInputModeIsVisibleKey</key>
+                <true/>
+            </dict>
         </dict>
     </dict>
 </dict>
