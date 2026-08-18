@@ -48,7 +48,7 @@
             <key>TISIntendedLanguage</key>
             <string>zh-Hans</string>
             <key>tsInputModeScriptKey</key>
-            <string>smpl</string>
+            <data>c21wbA==</data>
             <key>tsInputModePrimaryInScriptKey</key>
             <true/>
             <key>tsInputModeIsVisibleKey</key>
@@ -72,7 +72,7 @@
                 <key>TISIntendedLanguage</key>
                 <string>zh-Hans</string>
                 <key>tsInputModeScriptKey</key>
-                <string>smpl</string>
+                <data>c21wbA==</data>
                 <key>tsInputModePrimaryInScriptKey</key>
                 <true/>
                 <key>tsInputModeIsVisibleKey</key>
