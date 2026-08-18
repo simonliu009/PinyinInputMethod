@@ -130,6 +130,16 @@ pkg: $(APP_BUNDLE)
 	@echo '#!/bin/bash' > $(SCRIPTS_DIR)/postinstall
 	@echo '# 刷新系统偏好设置缓存' >> $(SCRIPTS_DIR)/postinstall
 	@echo '/usr/bin/killall -HUP cfprefsd 2>/dev/null || true' >> $(SCRIPTS_DIR)/postinstall
+	@echo '# 注册输入法到系统输入法列表' >> $(SCRIPTS_DIR)/postinstall
+	@echo 'PLIST=~/Library/Preferences/com.apple.HIToolbox.plist' >> $(SCRIPTS_DIR)/postinstall
+	@echo 'if [ -f "$$PLIST" ]; then' >> $(SCRIPTS_DIR)/postinstall
+	@echo '    # 检查是否已注册' >> $(SCRIPTS_DIR)/postinstall
+	@echo '    if ! grep -q "com.ximeng.inputmethod" "$$PLIST" 2>/dev/null; then' >> $(SCRIPTS_DIR)/postinstall
+	@echo '        /usr/libexec/PlistBuddy -c "Add :AppleEnabledInputSources: dict" "$$PLIST" 2>/dev/null' >> $(SCRIPTS_DIR)/postinstall
+	@echo '        /usr/libexec/PlistBuddy -c "Add :AppleEnabledInputSources:0:Bundle ID string com.ximeng.inputmethod" "$$PLIST" 2>/dev/null || true' >> $(SCRIPTS_DIR)/postinstall
+	@echo '        /usr/libexec/PlistBuddy -c "Add :AppleEnabledInputSources:0:InputSourceKind string \"Keyboard Input Method\"" "$$PLIST" 2>/dev/null || true' >> $(SCRIPTS_DIR)/postinstall
+	@echo '    fi' >> $(SCRIPTS_DIR)/postinstall
+	@echo 'fi' >> $(SCRIPTS_DIR)/postinstall
 	@echo '# 启动一次输入法以触发系统注册' >> $(SCRIPTS_DIR)/postinstall
 	@echo 'IM_APP="/Library/Input Methods/PinyinInputMethod.app"' >> $(SCRIPTS_DIR)/postinstall
 	@echo 'if [ -d "$$IM_APP" ]; then' >> $(SCRIPTS_DIR)/postinstall
